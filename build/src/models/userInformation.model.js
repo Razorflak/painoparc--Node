@@ -28,7 +28,9 @@ let UserInformation = /** @class */ (() => {
     __decorate([
         sequelize_typescript_1.AllowNull(true),
         sequelize_typescript_1.NotEmpty,
-        sequelize_typescript_1.Column,
+        sequelize_typescript_1.Column({
+            type: sequelize_typescript_1.DataType.TEXT
+        }),
         __metadata("design:type", String)
     ], UserInformation.prototype, "bio", void 0);
     __decorate([

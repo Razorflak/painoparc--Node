@@ -16,7 +16,6 @@ const express_1 = __importDefault(require("express"));
 const logger_1 = __importDefault(require("./loaders/logger"));
 const config_1 = __importDefault(require("../config"));
 const logger_2 = require("./error/logger");
-const insertDonneesTest_1 = require("./dev/insertDonneesTest");
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {
         const app = express_1.default();
@@ -32,14 +31,14 @@ function startServer() {
         //TODO Revoir pour factoriser ça quand ça deviendra charger...
         yield require('./loaders/express').default({ app });
         yield require('./loaders/dbPostgres');
-        yield insertDonneesTest_1.insertDonneesTest();
+        //await insertDonneesTest();
         app.listen(config_1.default.port, err => {
             if (err) {
                 logger_1.default.error(err);
                 process.exit(1);
                 return;
             }
-            logger_2.logInfo('##########Server listening on port: ${config.port}##########', logger_2.typeMessage.Succesful);
+            logger_2.logInfo('##########Server listening on port: ' + config_1.default.port + '##########', logger_2.typeMessage.Succesful);
         });
     });
 }

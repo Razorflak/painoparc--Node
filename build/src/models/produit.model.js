@@ -34,13 +34,17 @@ let Produit = /** @class */ (() => {
     __decorate([
         sequelize_typescript_1.AllowNull(true),
         sequelize_typescript_1.NotEmpty,
-        sequelize_typescript_1.Column,
+        sequelize_typescript_1.Column({
+            type: sequelize_typescript_1.DataType.TEXT
+        }),
         __metadata("design:type", String)
     ], Produit.prototype, "description", void 0);
     __decorate([
         sequelize_typescript_1.AllowNull(false),
         sequelize_typescript_1.NotEmpty,
-        sequelize_typescript_1.Column,
+        sequelize_typescript_1.Column({
+            type: sequelize_typescript_1.DataType.FLOAT
+        }),
         __metadata("design:type", Number)
     ], Produit.prototype, "prix", void 0);
     __decorate([
@@ -52,7 +56,9 @@ let Produit = /** @class */ (() => {
     __decorate([
         sequelize_typescript_1.AllowNull(true),
         sequelize_typescript_1.NotEmpty,
-        sequelize_typescript_1.Column,
+        sequelize_typescript_1.Column({
+            type: sequelize_typescript_1.DataType.FLOAT
+        }),
         __metadata("design:type", Number)
     ], Produit.prototype, "commission", void 0);
     Produit = __decorate([

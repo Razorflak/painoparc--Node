@@ -30,7 +30,7 @@ async function startServer() {
 	    return;
 	  }
 
-	  logInfo('##########Server listening on port: ${config.port}##########', typeMessage.Succesful);
+	  logInfo('##########Server listening on port: '+config.port+'##########', typeMessage.Succesful);
 	});
    }
    

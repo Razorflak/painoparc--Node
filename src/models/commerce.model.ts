@@ -1,13 +1,13 @@
-import { ICommercant } from './../interfaces/ICommercant';
+import { ICommerce } from '../interfaces/ICommerce';
 import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } from 'sequelize-typescript';
 
    @Table(
 	   {
-		   tableName: "commercant",
+		   tableName: "commerce",
 		   timestamps: true
 	   }
    )
-   export default class Commercant extends Model implements ICommercant{
+   export default class Commerce extends Model implements ICommerce{
 	
 	@AutoIncrement
 	@PrimaryKey

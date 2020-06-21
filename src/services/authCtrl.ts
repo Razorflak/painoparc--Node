@@ -1,8 +1,8 @@
+import { IUserInformation } from './../interfaces/IUserInformation';
 import { IUser } from './../interfaces/IUser';
 import { Request } from 'express';
 import { userRules } from './../validators/user.validator';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import User from '../models/user.model';
 import { resolve } from 'dns';
 import config from '../../config'
@@ -12,6 +12,7 @@ import { GeneralError } from '../error/generalError';
 import HttpStatus  from 'http-status-codes';
 import { read } from 'fs';
 import UserInformation from '../models/userInformation.model';
+import { generateTokenForUser } from './authTokenCtrl';
 //import models from '../models'
 //var models  = require('../models');
 //var userModele = require('../models/user');
@@ -19,6 +20,17 @@ import UserInformation from '../models/userInformation.model';
 
 
 export default class AuthCtrl {
+	public async getPublicProfil (idUser: number): Promise<UserInformation> {
+		try {
+			return UserInformation.findOne({
+				where: {
+					idUser: idUser
+				}
+			})
+		} catch (error) {
+			throw new GeneralError(999,"Erreur lors de la récupération du ProfilPublic",500)
+		}
+	}
 	
 	public async login(userInfo: IUser): Promise<{user: User, token: string }> {
 		
@@ -32,7 +44,7 @@ export default class AuthCtrl {
 			if(user){
 				const passwordMatch = await bcrypt.compare(userInfo.password,user.password);
 				if(passwordMatch){
-					const token = this.generateTokenForUser(user);
+					const token = generateTokenForUser(user);
 					return {user,token};
 				}else{
 					var err:GeneralError = new GeneralError (500,"Mot de passe invalid",HttpStatus.UNAUTHORIZED);
@@ -101,12 +113,9 @@ export default class AuthCtrl {
 
 	public async getProfil(req: Request):Promise<User> {
 		try {
-			const userId = this.validateToken(req);
-			//TODO Chargement des infos du profil
-			//Retour du user 1 pour le moment
 			const userProfil = await User.findOne ({
 				where: {
-					id: userId
+					id: req.body.userId
 				},
 				include: [UserInformation]
 			});
@@ -116,34 +125,18 @@ export default class AuthCtrl {
 		}
 	}
 
-
-	public generateTokenForUser (user: IUser):string{
-		
-		return jwt.sign({
-			userId: user.id,
-			isAdmin: false
+	public async postProfil(req: Request):Promise<boolean> {
+		try {
+			var profil: IUserInformation = req.body.profil;
+			return await UserInformation.upsert(profil);
+		} catch (error) {
+			logInfo('Erreur postProfil: ' + error.message, typeMessage.Error);
+			throw new GeneralError(999,error.message,500);
+			
 		}
-		,config.jwtSecret,
-		{
-			expiresIn: '1d'
-		});
 	}
 
-	public validateToken (req: Request):number{
-		var headerAuth:String = req.get('authorization')
-		const token = (headerAuth != null ) ? headerAuth.replace('Bearer ', '') : null;
-		if(!token){
-			throw new Error ("Missing TOKEN !");
-		};
-		var userId = -1;
-		 //Validation du TOKEN
-		 var jwtToken = jwt.verify(token, config.jwtSecret);
-		 if (jwtToken){
-			return parseInt(jwtToken["userId"]);
-		 }else{
-			 throw new Error ("TOKEN invalid");
-		 }
 
-	}
+	
 
 }

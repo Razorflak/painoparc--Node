@@ -35,5 +35,4 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 	   password: string;
 
 	   isAdmin: number;
-	   isCommercant: number;
    }

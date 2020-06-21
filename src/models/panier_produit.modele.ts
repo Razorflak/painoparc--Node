@@ -2,12 +2,16 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 
    @Table(
 	   {
-		   tableName: "commande_produit",
+		   tableName: "panier_produit",
 		   timestamps: true
 	   }
    )
-   export default class Commande_Produit extends Model{
+   export default class Panier_Produit extends Model{
 	
+	@AutoIncrement
+	@PrimaryKey
+	@Column
+	id: number;
 	
 	@AllowNull(true)
 	@NotEmpty

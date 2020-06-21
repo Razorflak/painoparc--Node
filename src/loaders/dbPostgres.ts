@@ -1,17 +1,18 @@
-import { IUser } from './../interfaces/IUser';
 import {Sequelize, BelongsTo} from "sequelize-typescript"
 import term from 'terminal-kit';
 import { logInfo, typeMessage, logError } from "../error/logger";
 import User from "../models/user.model";
 import Camping from "../models/camping.model";
-import Commercant from "../models/commercant.model"
+import Commerce from "../models/commerce.model";
 import Commande from "../models/commande.model";
 import Produit from "../models/produit.model";
+import Panier from "../models/panier.model";
 import UserInformation from "../models/userInformation.model";
-import AuthCtrl from "../services/authCtrl";
 import { insertDonneesTest } from '../dev/insertDonneesTest';
-import { type } from 'os';
-import Commande_Produit from '../models/commande_product.modele';
+import Commande_Produit from '../models/commande_produit.modele';
+import Panier_Produit from '../models/panier_produit.modele';
+import User_Commerce_droit from '../models/user_commerce_droit.modele';
+import User_Camping_Droit from "../models/user_camping_droit.modele";
 
 
 var t =__dirname + '../models';
@@ -22,18 +23,36 @@ var t =__dirname + '../models';
 export const sequelize: Sequelize = new Sequelize('postgres://postgres:postgres@localhost:5433/breaddelivery',{
 	dialect: 'postgres',
     models: [__dirname + '/../models'],
-    logging: false
+    logging: true
 });    
 
 //initialisation des jointures 
-User.belongsToMany(Camping, {through: 'User_Camping'});
-Camping.belongsToMany(User, {through: 'User_Camping'});
+User.hasMany(User_Camping_Droit);
+Camping.hasMany(User_Camping_Droit);
 
-Camping.belongsToMany(Commercant, {through: 'Commercant_Camping'});
-Commercant.belongsToMany(Camping, {through: 'Commercant_Camping'});
+Camping.belongsToMany(Commerce, {through: 'commerce_camping'});
+Commerce.belongsToMany(Camping, {through: 'commerce_camping'});
 
-Commande.belongsToMany(Produit, {through : Commande_Produit});
-Produit.belongsToMany(Commande, {through : Commande_Produit});
+Commande.belongsToMany(Produit, {
+	through : Commande_Produit
+});
+Produit.belongsToMany(Commande, {
+	through : Commande_Produit
+});
+
+/*Panier_Produit.belongsToMany(Produit, {
+	through : Panier_Produit
+});
+Panier_Produit.belongsToMany(Panier, {
+	through : Panier_Produit
+});*/
+Panier.hasMany(Panier_Produit);
+Produit.hasMany(Panier_Produit);
+
+Commerce.hasMany(User_Commerce_droit);
+User.hasMany(User_Commerce_droit);
+
+
 
 //Note pour les jointure 1-1 la table BelongTo contient la clé parent
 //On définit la foreing Key pour s'assurer que c'est une colonne défini du modèle qui est utilisé
@@ -51,17 +70,19 @@ UserInformation.belongsTo(User,{
 	}
 });
 
-//Commercant <-n> Produit
-Commercant.hasMany(Produit, {
+//Commerce <-n> Produit
+Commerce.hasMany(Produit, {
 	foreignKey:{
 		name: 'idCommercant'
 	}
 });
-Produit.belongsTo(Commercant,{
+Produit.belongsTo(Commerce,{
 	foreignKey:{
 		name: 'idCommercant'
 	}
 });
+
+
 
 //User <--> Commande
 User.hasMany(Commande,{
@@ -75,13 +96,25 @@ Commande.belongsTo(User,{
 	}
 });
 
-//User <--> Commande
-Commercant.hasMany(Commande,{
+//User <--> Panier
+User.hasMany(Panier,{
+	foreignKey: {
+		name: 'idUser'
+	}
+});
+Panier.belongsTo(User,{
+	foreignKey: {
+		name: 'idUser'
+	}
+});
+
+//Commercant <--> Commande
+Commerce.hasMany(Commande,{
 	foreignKey: {
 		name: 'idCommercant'
 	}
 });
-Commande.belongsTo(Commercant,{
+Commande.belongsTo(Commerce,{
 	foreignKey: {
 		name: 'idCommercant'
 	}

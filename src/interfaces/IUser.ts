@@ -5,6 +5,5 @@ export interface IUser {
   email: string;
   password: string;
   isAdmin: number;
-  isCommercant: number;
 }
 

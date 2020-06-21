@@ -33,19 +33,16 @@ let Commande = /** @class */ (() => {
     ], Commande.prototype, "idCommercant", void 0);
     __decorate([
         sequelize_typescript_1.AllowNull(true),
-        sequelize_typescript_1.NotEmpty,
         sequelize_typescript_1.Column,
         __metadata("design:type", Date)
     ], Commande.prototype, "dateCommande", void 0);
     __decorate([
         sequelize_typescript_1.AllowNull(true),
-        sequelize_typescript_1.NotEmpty,
         sequelize_typescript_1.Column,
         __metadata("design:type", Date)
     ], Commande.prototype, "dateLivraisonPrevu", void 0);
     __decorate([
         sequelize_typescript_1.AllowNull(true),
-        sequelize_typescript_1.NotEmpty,
         sequelize_typescript_1.Column,
         __metadata("design:type", Date)
     ], Commande.prototype, "dateReception", void 0);

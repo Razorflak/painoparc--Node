@@ -23,7 +23,7 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 	@AllowNull(false)
 	@NotEmpty
 	@Column
-	idCommercant: number;
+	idCommerce: number;
 
 	@AllowNull(true)
 	@NotEmpty
@@ -50,6 +50,12 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 		type: DataType.FLOAT
 	})
 	commission: number;
-	   
+	
+	@AllowNull(false)
+	@NotEmpty
+	@Column({
+		type: DataType.BOOLEAN
+	})
+	isAvailable: boolean;
 	   
    }

@@ -13,13 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_model_1 = __importDefault(require("../models/user.model"));
-const config_1 = __importDefault(require("../../config"));
 const logger_1 = require("../error/logger");
 const generalError_1 = require("../error/generalError");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const userInformation_model_1 = __importDefault(require("../models/userInformation.model"));
+const authTokenCtrl_1 = require("./authTokenCtrl");
 //import models from '../models'
 //var models  = require('../models');
 //var userModele = require('../models/user');
@@ -35,7 +34,7 @@ class AuthCtrl {
                 if (user) {
                     const passwordMatch = yield bcrypt_1.default.compare(userInfo.password, user.password);
                     if (passwordMatch) {
-                        const token = this.generateTokenForUser(user);
+                        const token = authTokenCtrl_1.generateTokenForUser(user);
                         return { user, token };
                     }
                     else {
@@ -105,46 +104,20 @@ class AuthCtrl {
     getProfil(req) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const userId = this.validateToken(req);
                 //TODO Chargement des infos du profil
                 //Retour du user 1 pour le moment
                 const userProfil = yield user_model_1.default.findOne({
                     where: {
-                        id: userId
+                        id: req.body.userId
                     },
                     include: [userInformation_model_1.default]
                 });
                 return userProfil;
             }
             catch (error) {
-                logger_1.logInfo('Erreur getProfil: ' + error.message);
+                logger_1.logInfo('Erreur getProfil: ' + error.message, logger_1.typeMessage.Error);
             }
         });
-    }
-    generateTokenForUser(user) {
-        return jsonwebtoken_1.default.sign({
-            userId: user.id,
-            isAdmin: false
-        }, config_1.default.jwtSecret, {
-            expiresIn: '1d'
-        });
-    }
-    validateToken(req) {
-        var headerAuth = req.get('authorization');
-        const token = (headerAuth != null) ? headerAuth.replace('Bearer ', '') : null;
-        if (!token) {
-            throw new Error("Missing TOKEN !");
-        }
-        ;
-        var userId = -1;
-        //Validation du TOKEN
-        var jwtToken = jsonwebtoken_1.default.verify(token, config_1.default.jwtSecret);
-        if (jwtToken) {
-            return parseInt(jwtToken["userId"]);
-        }
-        else {
-            throw new Error("TOKEN invalid");
-        }
     }
 }
 exports.default = AuthCtrl;
