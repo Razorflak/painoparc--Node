@@ -1,3 +1,4 @@
+import { ICommerce } from './../interfaces/ICommerce';
 import { IUser_Commerce_Droits } from './../interfaces/IUser_Commerce_Droit';
 import HttpStatus from 'http-status-codes';
 import { GeneralError } from './../error/generalError';
@@ -7,7 +8,9 @@ import User_Commerce_droit from '../models/user_commerce_droit.modele';
 import Commerce from '../models/commerce.model';
 import Camping from '../models/camping.model';
 import User_Camping_Droit from '../models/user_camping_droit.modele';
-import { logInfo } from '../error/logger';
+import { logInfo, typeMessage, logError } from "../error/logger";
+import Commerce_Camping from '../models/commerce_camping.model';
+import User from '../models/user.model';
 
 
 export default class ProduitCtrl{
@@ -18,38 +21,39 @@ export default class ProduitCtrl{
 	public async getAllProduitPourCommande(userId: number): Promise<Produit[]> {
 		logInfo(userId.toString());
 		try {
+			//TODO Définir les champs de Commerce et Porduit à afficher à afficher une fois le modèle complet
 			/**
-			 * TODO vérifier le SQL généré et ajouter des données dans le jeu de test pour vir si c'est OK
-			 * SELECT "Produit"."id", "Produit"."nom", "Produit"."idCommerce", "Produit"."description", "Produit"."prix", "Produit"."stock", "Produit"."commission", "Produit"."isAvailable", "Produit"."createdAt", "Produit"."updatedAt", "Produit"."idCommercant", "Commerce"."id" AS "Commerce.id", "Commerce"."nomCommerce" AS "Commerce.nomCommerce", "Commerce"."emailCommande" AS "Commerce.emailCommande", "Commerce"."createdAt" AS "Commerce.createdAt", "Commerce"."updatedAt" AS "Commerce.updatedAt", "Commerce->Campings"."id" AS "Commerce.Campings.id", "Commerce->Campings"."nom" AS "Commerce.Campings.nom", "Commerce->Campings"."createdAt" AS "Commerce.Campings.createdAt", "Commerce->Campings"."updatedAt" AS "Commerce.Campings.updatedAt", "Commerce->Campings->commerce_camping"."createdAt" AS "Commerce.Campings.commerce_camping.createdAt", "Commerce->Campings->commerce_camping"."updatedAt" AS "Commerce.Campings.commerce_camping.updatedAt", "Commerce->Campings->commerce_camping"."CampingId" AS "Commerce.Campings.commerce_camping.CampingId", "Commerce->Campings->commerce_camping"."CommerceId" AS "Commerce.Campings.commerce_camping.CommerceId", "Commerce->Campings->User_Camping_Droits"."id" AS "Commerce.Campings.User_Camping_Droits.id", "Commerce->Campings->User_Camping_Droits"."UserId" AS "Commerce.Campings.User_Camping_Droits.UserId", "Commerce->Campings->User_Camping_Droits"."CampingId" AS "Commerce.Campings.User_Camping_Droits.CampingId", "Commerce->Campings->User_Camping_Droits"."droit" AS "Commerce.Campings.User_Camping_Droits.droit", "Commerce->Campings->User_Camping_Droits"."dateArrivee" AS "Commerce.Campings.User_Camping_Droits.dateArrivee", "Commerce->Campings->User_Camping_Droits"."dateDepart" AS "Commerce.Campings.User_Camping_Droits.dateDepart", "Commerce->Campings->User_Camping_Droits"."createdAt" AS "Commerce.Campings.User_Camping_Droits.createdAt", "Commerce->Campings->User_Camping_Droits"."updatedAt" AS "Commerce.Campings.User_Camping_Droits.updatedAt" 
-FROM "produit" AS "Produit" 
-INNER JOIN "commerce" AS "Commerce" ON "Produit"."idCommercant" = "Commerce"."id" 
-INNER JOIN ( "commerce_camping" AS "Commerce->Campings->commerce_camping" 
-INNER JOIN "camping" AS "Commerce->Campings" ON "Commerce->Campings"."id" = "Commerce->Campings->commerce_camping"."CampingId") ON "Commerce"."id" = "Commerce->Campings->commerce_camping"."CommerceId" 
-INNER JOIN "user_camping_droit" AS "Commerce->Campings->User_Camping_Droits" ON "Commerce->Campings"."id" = "Commerce->Campings->User_Camping_Droits"."CampingId";
+			 * Récupération des produit commandable sur le camping de l'utilisateur
 			 */
+			var arrayFieldsComerce = ['id','nomCommerce'];
+			var arrayFieldsProduit = ['id','nom','description','prix','stock'];
 			var result = await Produit.findAll({
-				/*where: {
-					id: userId,
-					isAvailable: true
-				},*/
-				include:[{
+				attributes: arrayFieldsProduit,
+				include: [{
 					model: Commerce,
+					attributes: arrayFieldsComerce,
 					required: true,
-					include: [
-						{
-							model: Camping,
-							required: true,
-							include: [
-								{
-									model: User_Camping_Droit,
-									required: true
-								}
-							]
-						}
-					]
-				}]
+					include: [{
+						model: Camping,
+						attributes: [],
+						include: [{
+							model: User,
+							attributes: [],
+							where: {
+								id: userId
+							},
+							required: true
+						}],
+						required: true
+					}]
+				}],
+				where: {
+					isAvailable: true
+				}
 			});
+
 		} catch (error) {
+			logInfo(error.message,typeMessage.Error);
 			throw new GeneralError(999,'Erreur dans getAllProduitPourCommande: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -58,7 +62,6 @@ INNER JOIN "user_camping_droit" AS "Commerce->Campings->User_Camping_Droits" ON 
 
 	public async postProduit(body): Promise<boolean> {
 		try {
-			//TODO; Vérifier si le user à les droits pour créer ou modifier sur ce marchand
 			var produit:IProduit = body.produit;
 			var commerceId: number = produit.idCommerce;
 			var userId: number = body.userId;
@@ -74,10 +77,10 @@ INNER JOIN "user_camping_droit" AS "Commerce->Campings->User_Camping_Droits" ON 
 			throw new GeneralError(999,'Erreur lors du postProduit: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		if(userCommerceDroit == null){
+		if(userCommerceDroit == null || userCommerceDroit.droit < 2){
 			throw new GeneralError(999, 'Vous n\'êtes pas autorisé à créer ou modifier un produit sur ce commerce.', HttpStatus.UNAUTHORIZED);
 		}
-		return await Produit.upsert(body.data);
+		return await Produit.upsert(produit);
 		
 	}
 

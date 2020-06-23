@@ -23,7 +23,7 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 		@AllowNull(false)
 		@NotEmpty
 		@Column
-		idCommercant: number;
+		idCommerce: number;
 
 		@AllowNull(true)
 		@Column

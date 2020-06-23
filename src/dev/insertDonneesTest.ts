@@ -1,3 +1,6 @@
+import { IUser_Commerce_Droits } from './../interfaces/IUser_Commerce_Droit';
+import { ICamping } from './../interfaces/ICamping';
+import { ICommerce_Camping } from './../interfaces/ICommerce_Camping';
 import { IPanier } from './../interfaces/IPanier';
 import { ICommande_Produit } from './../interfaces/ICommande_Produit';
 import { ICommande } from './../interfaces/ICommande';
@@ -11,12 +14,14 @@ import User from '../models/user.model';
 import { logInfo } from '../error/logger';
 import Camping from '../models/camping.model';
 import { ICommerce } from '../interfaces/ICommerce';
-import Commercant from '../models/commerce.model';
 import Produit from '../models/produit.model';
 import Commande from '../models/commande.model';
 import Commande_Produit from '../models/commande_produit.modele';
 import Panier from '../models/panier.model';
 import Panier_Produit from '../models/panier_produit.modele';
+import Commerce_Camping from '../models/commerce_camping.model';
+import User_Camping_Droit from '../models/user_camping_droit.modele';
+import Commerce from '../models/commerce.model';
 
 export async function insertDonneesTest (){
 	try {
@@ -36,16 +41,20 @@ export async function insertDonneesTest (){
 			adresse: "94 avenue de la Baraudière"
 		});
 
-		Camping.create({
+		var camping:ICamping = await Camping.create({
 			id: 1,
 			nom: 'Parc des Rosalières'
 		});
 
-		var commerce:ICommerce = {
+		Camping.create({
+			id: 2,
+			nom: 'Parc des Rosalières'
+		});
+
+		var commerce: ICommerce = await Commerce.create({
 			emailCommande: 'Email@commercant.fr',
 			nomCommerce: 'Boulangerie de Sion'
-		}
-		commerce = await Commercant.create(commerce);
+		});
 
 		var produit: Array<IProduit> = [{
 			idCommerce: commerce.id,
@@ -63,6 +72,14 @@ export async function insertDonneesTest (){
 			commission: 0.1,
 			stock: 2,
 			isAvailable: true
+			},{
+			idCommerce: commerce.id,
+			nom: 'Les bon pain au chocolat',
+			prix: 1.2,
+			description: 'une description MEGA longue car le mec à beaucoup de chose à dire sur sont produit de merde !!!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nsqdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+			commission: 0.1,
+			stock: 100000000,
+			isAvailable: true
 			}];
 
 		var retProd:Produit[] = await Produit.bulkCreate(produit);
@@ -73,7 +90,7 @@ export async function insertDonneesTest (){
 			dateCommande: new Date,
 			dateLivraisonPrevu: date,
 			dateReception: date,
-			idCommercant: commerce.id
+			idCommerce: commerce.id
 		};
 		commande = await Commande.create(commande);
 
@@ -100,8 +117,15 @@ export async function insertDonneesTest (){
 		}
 
 		Panier_Produit.create(panierProduits);
-
-
+		Commerce_Camping.create({
+			CampingId: camping.id,
+			CommerceId: commerce.id
+		} as ICommerce_Camping);
+		User_Camping_Droit.create({
+			CampingId: camping.id,
+			UserId: newUser.id,
+			droit: 0
+		});
 
 
 

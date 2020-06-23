@@ -13,6 +13,7 @@ import Commande_Produit from '../models/commande_produit.modele';
 import Panier_Produit from '../models/panier_produit.modele';
 import User_Commerce_droit from '../models/user_commerce_droit.modele';
 import User_Camping_Droit from "../models/user_camping_droit.modele";
+import Commerce_Camping from "../models/commerce_camping.model";
 
 
 var t =__dirname + '../models';
@@ -27,11 +28,18 @@ export const sequelize: Sequelize = new Sequelize('postgres://postgres:postgres@
 });    
 
 //initialisation des jointures 
-User.hasMany(User_Camping_Droit);
-Camping.hasMany(User_Camping_Droit);
+User.belongsToMany(Camping,{through: User_Camping_Droit});
+Camping.belongsToMany(User,{through: User_Camping_Droit});
 
-Camping.belongsToMany(Commerce, {through: 'commerce_camping'});
-Commerce.belongsToMany(Camping, {through: 'commerce_camping'});
+
+
+Camping.belongsToMany(Commerce,{through: Commerce_Camping});
+Commerce.belongsToMany(Camping,{through: Commerce_Camping});
+/*Commerce.hasMany(Commerce_Camping);
+Camping.hasMany(Commerce_Camping);*/
+
+
+
 
 Commande.belongsToMany(Produit, {
 	through : Commande_Produit
@@ -73,12 +81,12 @@ UserInformation.belongsTo(User,{
 //Commerce <-n> Produit
 Commerce.hasMany(Produit, {
 	foreignKey:{
-		name: 'idCommercant'
+		name: 'idCommerce'
 	}
 });
 Produit.belongsTo(Commerce,{
 	foreignKey:{
-		name: 'idCommercant'
+		name: 'idCommerce'
 	}
 });
 
@@ -111,12 +119,12 @@ Panier.belongsTo(User,{
 //Commercant <--> Commande
 Commerce.hasMany(Commande,{
 	foreignKey: {
-		name: 'idCommercant'
+		name: 'idCommerce'
 	}
 });
 Commande.belongsTo(Commerce,{
 	foreignKey: {
-		name: 'idCommercant'
+		name: 'idCommerce'
 	}
 });
 

@@ -1,7 +1,7 @@
 export interface ICommande {
 	id?: number;
 	idUser: number;
-	idCommercant: number;
+	idCommerce: number;
 	dateCommande: Date;
 	dateLivraisonPrevu: Date;
 	dateReception: Date;

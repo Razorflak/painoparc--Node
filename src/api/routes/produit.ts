@@ -39,6 +39,9 @@ routeProduit.get('/allProduitPourCommande',async(req, res) => {
 	}
 });
 
+/**
+ * TODO; Sans doute à changer, car ça intercepte tout et donc pas de possibilité de 404... C'est naze!
+ */
 routeProduit.get('/:id',async (req: Request, res: Response) => {
 	try {
 		var id = req.params.id;
