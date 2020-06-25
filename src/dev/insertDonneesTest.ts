@@ -1,3 +1,4 @@
+import { ICategorie } from './../interfaces/ICategorie';
 import { IUser_Commerce_Droits } from './../interfaces/IUser_Commerce_Droit';
 import { ICamping } from './../interfaces/ICamping';
 import { ICommerce_Camping } from './../interfaces/ICommerce_Camping';
@@ -22,6 +23,7 @@ import Panier_Produit from '../models/panier_produit.modele';
 import Commerce_Camping from '../models/commerce_camping.model';
 import User_Camping_Droit from '../models/user_camping_droit.modele';
 import Commerce from '../models/commerce.model';
+import Categorie from '../models/categorie.model';
 
 export async function insertDonneesTest (){
 	try {
@@ -56,8 +58,17 @@ export async function insertDonneesTest (){
 			nomCommerce: 'Boulangerie de Sion'
 		});
 
+		var categoriePain:ICategorie = await Categorie.create({
+			libelle: 'Pain'
+		} as ICategorie);
+
+		var categorieVienposerie:ICategorie = await Categorie.create({
+			libelle: 'Viennoiseries'
+		} as ICategorie);
+
 		var produit: Array<IProduit> = [{
 			idCommerce: commerce.id,
+			idCategorie: categoriePain.id,
 			nom: 'Baguette traditionnelle',
 			prix: 1.20,
 			description: 'une description MEGA longue car le mec à beaucoup de chose à dire sur sont produit de merde !!!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nsqdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
@@ -66,6 +77,7 @@ export async function insertDonneesTest (){
 			isAvailable: true
 		},{
 			idCommerce: commerce.id,
+			idCategorie: categoriePain.id,
 			nom: 'La boule !',
 			prix: 10,
 			description: 'une description MEGA longue car le mec à beaucoup de chose à dire sur sont produit de merde !!!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nsqdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
@@ -74,6 +86,7 @@ export async function insertDonneesTest (){
 			isAvailable: true
 			},{
 			idCommerce: commerce.id,
+			idCategorie: categorieVienposerie.id,
 			nom: 'Les bon pain au chocolat',
 			prix: 1.2,
 			description: 'une description MEGA longue car le mec à beaucoup de chose à dire sur sont produit de merde !!!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nsqdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
@@ -106,7 +119,8 @@ export async function insertDonneesTest (){
 			dateCreation: new Date(),
 			dateMiseAJour: new Date(),
 			isFavori: false,
-			idUser: 1
+			idUser: 1,
+			isEnCours: true
 		}
 		panier = await Panier.create(panier);
 
@@ -126,6 +140,8 @@ export async function insertDonneesTest (){
 			UserId: newUser.id,
 			droit: 0
 		});
+
+		
 
 
 

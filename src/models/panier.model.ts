@@ -31,4 +31,8 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 		@AllowNull(true)
 		@Column
 		isFavori: Boolean;
+
+		@AllowNull(true)
+		@Column
+		isEnCours: Boolean;
    }

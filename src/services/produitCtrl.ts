@@ -11,6 +11,7 @@ import User_Camping_Droit from '../models/user_camping_droit.modele';
 import { logInfo, typeMessage, logError } from "../error/logger";
 import Commerce_Camping from '../models/commerce_camping.model';
 import User from '../models/user.model';
+import Categorie from '../models/categorie.model';
 
 
 export default class ProduitCtrl{
@@ -46,7 +47,7 @@ export default class ProduitCtrl{
 						}],
 						required: true
 					}]
-				}],
+				},Categorie],
 				where: {
 					isAvailable: true
 				}

@@ -25,6 +25,11 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 	@Column
 	idCommerce: number;
 
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	idCategorie: number;
+
 	@AllowNull(true)
 	@NotEmpty
 	@Column({

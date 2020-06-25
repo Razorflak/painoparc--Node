@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import Camping from "../models/camping.model";
 import Commerce from "../models/commerce.model";
 import Commande from "../models/commande.model";
+import Categorie from "../models/categorie.model";
 import Produit from "../models/produit.model";
 import Panier from "../models/panier.model";
 import UserInformation from "../models/userInformation.model";
@@ -31,35 +32,24 @@ export const sequelize: Sequelize = new Sequelize('postgres://postgres:postgres@
 User.belongsToMany(Camping,{through: User_Camping_Droit});
 Camping.belongsToMany(User,{through: User_Camping_Droit});
 
-
-
 Camping.belongsToMany(Commerce,{through: Commerce_Camping});
 Commerce.belongsToMany(Camping,{through: Commerce_Camping});
-/*Commerce.hasMany(Commerce_Camping);
-Camping.hasMany(Commerce_Camping);*/
 
+Commande.belongsToMany(Produit, {through : Commande_Produit});
+Produit.belongsToMany(Commande, {through : Commande_Produit});
 
+Panier.belongsToMany(Produit,{through: Panier_Produit});
+Produit.belongsToMany(Panier,{through: Panier_Produit});
 
+Commerce.belongsToMany(User,{through: User_Commerce_droit});
+User.belongsToMany(Commerce,{through: User_Commerce_droit});
 
-Commande.belongsToMany(Produit, {
-	through : Commande_Produit
+Produit.belongsTo(Categorie,{
+	foreignKey: {
+		name: 'idCategorie'
+	}
 });
-Produit.belongsToMany(Commande, {
-	through : Commande_Produit
-});
-
-/*Panier_Produit.belongsToMany(Produit, {
-	through : Panier_Produit
-});
-Panier_Produit.belongsToMany(Panier, {
-	through : Panier_Produit
-});*/
-Panier.hasMany(Panier_Produit);
-Produit.hasMany(Panier_Produit);
-
-Commerce.hasMany(User_Commerce_droit);
-User.hasMany(User_Commerce_droit);
-
+Categorie.hasMany(Produit);
 
 
 //Note pour les jointure 1-1 la table BelongTo contient la clé parent
