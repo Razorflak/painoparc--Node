@@ -1,7 +1,7 @@
+/build
 node_modules
 .env
 combined.log
 error.log
 config
-build
 .gitignore

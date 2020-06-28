@@ -1,3 +1,4 @@
+import { IPanier_Produit } from './IPanier_Produit';
 export interface IProduit{
 	id?: number;
 	idCommerce: number;
@@ -8,4 +9,5 @@ export interface IProduit{
 	stock: number;
 	commission: number;
 	isAvailable: boolean;
+	Panier_Produit?: IPanier_Produit;
 }

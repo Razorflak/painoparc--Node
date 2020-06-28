@@ -107,7 +107,7 @@ Panier.belongsTo(User,{
 });
 
 //Commercant <--> Commande
-Commerce.hasMany(Commande,{
+/*Commerce.hasMany(Commande,{
 	foreignKey: {
 		name: 'idCommerce'
 	}
@@ -116,7 +116,7 @@ Commande.belongsTo(Commerce,{
 	foreignKey: {
 		name: 'idCommerce'
 	}
-});
+});*/
 
 
 const reloadDataBase: boolean = true;

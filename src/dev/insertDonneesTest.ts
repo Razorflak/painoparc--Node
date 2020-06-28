@@ -98,12 +98,12 @@ export async function insertDonneesTest (){
 		var retProd:Produit[] = await Produit.bulkCreate(produit);
 
 		var date:Date = new Date();
+		date.setDate(date.getDate() + 1);
 		var commande: ICommande = await {
 			idUser: newUser.id,
 			dateCommande: new Date,
 			dateLivraisonPrevu: date,
-			dateReception: date,
-			idCommerce: commerce.id
+			dateReception: date
 		};
 		commande = await Commande.create(commande);
 

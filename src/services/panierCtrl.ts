@@ -38,4 +38,18 @@ export default class PanierCtrl{
 		});
 		return null;
 	}
+
+	public async getHistoriquePanierUser(idUser:number):Promise<IPanier[]>{
+		try {
+			var lstPanier:Array<IPanier> = await Panier.findAll({
+				where: {
+					idUser: idUser
+				}
+			});
+	
+			return lstPanier;	
+		} catch (error) {
+			throw new GeneralError(999,'Erreur lors de getHistoriquePanierUser: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

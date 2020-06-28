@@ -1,3 +1,4 @@
+import { IPanier_Produit } from './../interfaces/IPanier_Produit';
 import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } from 'sequelize-typescript';
 
    @Table(
@@ -6,7 +7,7 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 		   timestamps: true
 	   }
    )
-   export default class Panier_Produit extends Model{
+   export default class Panier_Produit extends Model implements IPanier_Produit{
 	
 	@AutoIncrement
 	@PrimaryKey

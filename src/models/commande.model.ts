@@ -20,11 +20,6 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 		@Column
 		idUser: number;
 
-		@AllowNull(false)
-		@NotEmpty
-		@Column
-		idCommerce: number;
-
 		@AllowNull(true)
 		@Column
 		dateCommande: Date;
