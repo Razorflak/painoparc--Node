@@ -64,8 +64,9 @@ export default class AuthCtrl {
 
 	
 
-	public async register (user: IUser): Promise<{ newUser: User; }> {
+	public async register (newUserInfo): Promise<{ newUser: User; }> {
 		try {
+			const user:IUser = newUserInfo.user;
 			const result = await User.findOne({
 				attributes: ['email'],
 				where: {
@@ -90,10 +91,10 @@ export default class AuthCtrl {
 
 				var newUser = await User.create({
 					email: user.email,
-					firstName: user.firstName,
-					lastName: user.lastName,
 					password: hashedPassword
 				});
+				newUserInfo.userInformation.idUser = newUser.id;
+				await UserInformation.create(newUserInfo.userInformation);
 
 				return {newUser};
 				

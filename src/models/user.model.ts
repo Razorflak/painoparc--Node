@@ -17,16 +17,6 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 	   @AllowNull(false)
 	   @NotEmpty
 	   @Column
-	   firstName: string;
-
-	   @AllowNull(false)
-	   @NotEmpty
-	   @Column
-	   lastName: string;
-
-	   @AllowNull(false)
-	   @NotEmpty
-	   @Column
 	   email!: string;
 
 	   @AllowNull(false)
@@ -34,5 +24,11 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 	   @Column
 	   password: string;
 
-	   isAdmin: number;
+	   @AllowNull(true)
+	   @Column
+	   isAdmin: boolean;
+
+	   @AllowNull(true)
+	   @Column
+	   isCommercant: boolean;
    }

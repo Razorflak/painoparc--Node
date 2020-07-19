@@ -11,10 +11,21 @@ export default(app: Router) => {
 	routeCommande.use(validateToken);
 
 	const commandeCtrl: CommandeCrtl = new CommandeCrtl();
+
 	routeCommande.get('/getMailsCommande', async(req,res) => {
 		try {
-			var result = commandeCtrl.generateMailCommande();
+			var result = await commandeCtrl.generateMailCommande();
 			res.status(HttpStatus.OK).send(result);
+		} catch (error) {
+			res.status(error.httpCodeError).send(error.message);
+		}
+	});
+
+	routeCommande.post('/postCreateCommandeFromPanier', async(req,res) => {
+		try {
+			if(commandeCtrl.createCommandeFromPanier(req.body.panier,req.body.dateLivraison)){
+				res.status(HttpStatus.OK).send('ok');
+			}
 		} catch (error) {
 			res.status(error.httpCodeError).send(error.message);
 		}

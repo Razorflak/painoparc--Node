@@ -5,6 +5,7 @@ import { IUser } from '../../interfaces/IUser';
 import User from '../../models/user.model';
 import { error } from 'winston';
 import AuthCtrl from '../../services/authCtrl';
+import { consoleLog, logInfo } from '../../error/logger';
 
 const route = Router();
 export default (app: Router) => {
@@ -18,7 +19,7 @@ export default (app: Router) => {
 
 	route.post("/register",(req: Request, res: Response) => {
 		
-		const userPromise = ctrlUser.register(req.body as IUser);	
+		const userPromise = ctrlUser.register(req.body);	
 		userPromise.then(newUser =>{
 			return res.status(200).json(newUser);
 		}).catch (err =>{
@@ -28,6 +29,7 @@ export default (app: Router) => {
 	
 	route.post("/login", async (req: Request, res: Response) => {
 		try {
+			
 			const {user, token} = await ctrlUser.login(req.body as IUser);
 			return res.status(200).json({
 				user: user,

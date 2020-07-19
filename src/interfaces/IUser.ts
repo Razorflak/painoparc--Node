@@ -1,9 +1,13 @@
+import { IUserInformation } from './IUserInformation';
 export interface IUser {
   id: number;
-  firstName: string;
-  lastName: string;
   email: string;
   password: string;
-  isAdmin: number;
+  isAdmin: boolean;
+  isCommercant: boolean;
+
+  //En fonction des retour de sequelize, les array qui peuvent venir avec les user
+  UserInformation?: IUserInformation;
+
 }
 

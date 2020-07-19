@@ -4,5 +4,7 @@ export interface IUserInformation {
 	bio: string;
 	emplacement: string;
 	adresse: string;
+	firstName: string;
+	lastName: string;
 
 }

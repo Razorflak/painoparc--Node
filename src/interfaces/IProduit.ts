@@ -1,4 +1,5 @@
 import { IPanier_Produit } from './IPanier_Produit';
+import { ICommande } from './ICommande';
 export interface IProduit{
 	id?: number;
 	idCommerce: number;
@@ -9,5 +10,9 @@ export interface IProduit{
 	stock: number;
 	commission: number;
 	isAvailable: boolean;
+
+	
 	Panier_Produit?: IPanier_Produit;
+	Commandes?: Array<ICommande>;
+
 }

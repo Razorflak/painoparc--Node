@@ -29,19 +29,22 @@ export async function insertDonneesTest (){
 	try {
 		logInfo("Insertion des données de test", typeMessage.Info)
 		const authInst: AuthCtrl = new AuthCtrl();
+
+
 		var {newUser} = await authInst.register({
-			email: 'tanguyj35@gmail.com',
-			firstName: 'Julien',
-			lastName: 'Tanguy',
-			password: 'azerty'
-		} as IUser);
-		
-		UserInformation.create({
-			idUser: newUser.id,
-			bio: "Ceci est une bio sur une ligne unique",
-			emplacement: "80a",
-			adresse: "94 avenue de la Baraudière"
+			user: {
+				email: 'tanguyj35@gmail.com',
+				password: 'azerty'
+			},
+			userInformation: {
+				bio: "Ceci est une bio sur une ligne unique",
+				emplacement: "80a",
+				adresse: "94 avenue de la Baraudière",
+				firstName: 'Julien',
+				lastName: 'Tanguy'
+			}
 		});
+		
 
 		var camping:ICamping = await Camping.create({
 			id: 1,
@@ -71,7 +74,7 @@ export async function insertDonneesTest (){
 			idCategorie: categoriePain.id,
 			nom: 'Baguette traditionnelle',
 			prix: 1.20,
-			description: 'une description MEGA longue car le mec à beaucoup de chose à dire sur sont produit de merde !!!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nsqdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+			description: 'Une bonne baguette à l\'ancienne',
 			commission: 0.1,
 			stock: 10000,
 			isAvailable: true
@@ -80,7 +83,7 @@ export async function insertDonneesTest (){
 			idCategorie: categoriePain.id,
 			nom: 'La boule !',
 			prix: 10,
-			description: 'une description MEGA longue car le mec à beaucoup de chose à dire sur sont produit de merde !!!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nsqdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+			description: 'Pas terrible mais ça fait masse pain',
 			commission: 0.1,
 			stock: 2,
 			isAvailable: true
@@ -89,7 +92,7 @@ export async function insertDonneesTest (){
 			idCategorie: categorieVienposerie.id,
 			nom: 'Les bon pain au chocolat',
 			prix: 1.2,
-			description: 'une description MEGA longue car le mec à beaucoup de chose à dire sur sont produit de merde !!!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nsqdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+			description: 'L\'ami rocore',
 			commission: 0.1,
 			stock: 100000000,
 			isAvailable: true

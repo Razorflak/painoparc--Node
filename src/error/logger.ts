@@ -18,7 +18,7 @@ export function logError (err: GeneralError){
 
 export function logDev(message: string){
 	message += "\n";
-	term.bgYellow(message);
+	term.magenta(message);
 }
 
 

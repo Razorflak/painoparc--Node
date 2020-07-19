@@ -23,7 +23,6 @@ import { IUserInformation } from '../interfaces/IUserInformation';
 	idUser: number;
 
 	@AllowNull(true)
-	@NotEmpty
 	@Column({
 		type: DataType.TEXT
 	})
@@ -38,6 +37,16 @@ import { IUserInformation } from '../interfaces/IUserInformation';
 	@NotEmpty
 	@Column
 	adresse: string;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	firstName: string;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	lastName: string;
 	   
 	   
    }

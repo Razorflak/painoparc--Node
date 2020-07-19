@@ -1,3 +1,4 @@
+import { IProduit } from './../interfaces/IProduit';
 import { ICommerce } from './../interfaces/ICommerce';
 import { ICommande_Produit } from './../interfaces/ICommande_Produit';
 import HttpStatus from 'http-status-codes';
@@ -9,6 +10,13 @@ import Commande_Produit from '../models/commande_produit.modele';
 import Produit from '../models/produit.model';
 import Commerce from '../models/commerce.model';
 import { where } from 'sequelize';
+import { Op } from 'sequelize';
+import { logInfo, logDev } from '../error/logger';
+import produit from '../api/routes/produit';
+import User from '../models/user.model';
+import user from '../api/routes/user';
+import UserInformation from '../models/userInformation.model';
+import moment from 'moment';
 
 export default class CommandeCrtl{
 	/**
@@ -42,13 +50,18 @@ export default class CommandeCrtl{
 		return true;
 	}
 
+	/**
+	 * Génération du mail mail de commande à envoyer au Commerce.
+	 * @param dateLivraison date pour laquelle on souahite générer le mail. Si null, la date est celle de demain
+	 */
 	public async generateMailCommande(dateLivraison?:Date):Promise<String[]>{
 		if(dateLivraison == null){
 			dateLivraison = new Date();
 			dateLivraison.setDate(dateLivraison.getDate() + 1)
 		}
 
-		var lstCommerce = await Commerce.findAll({
+		//TODO: Fonctionne comme ça, mais sera sans doute à revoir pour les date, ça semble être le bordel avec UTC+2
+		var lstCommerce:Array<ICommerce> = await Commerce.findAll({
 			include: [{
 				model: Produit,
 				required: true,
@@ -56,8 +69,14 @@ export default class CommandeCrtl{
 					model: Commande,
 					required: true,
 					where: {
-						dateLivraisonPrevu: dateLivraison
-					}
+						dateLivraisonPrevu: {
+							[Op.between]: [moment(dateLivraison).hours(0).minutes(1).toString(),moment(dateLivraison).hours(23).minutes(59).toString()]
+						}
+					},
+					include: [{
+						model: User,
+						include: [UserInformation]
+					}]
 				}]
 				
 			}]
@@ -65,12 +84,27 @@ export default class CommandeCrtl{
 
 		var arrayMails = new Array<String>();
 		var mailResult: String = "";
-		mailResult += "Bonjour,\n";
-		mailResult += "Voici la commandes pour demain (" + dateLivraison.toString() + "): \n";
+		
 		
 		lstCommerce.forEach(commerce => {
-			(commerce as ICommerce)
+			mailResult += "Bonjour,\n";
+			mailResult += "Voici la commande pour demain (" + dateLivraison.toString() + "): \n";
+			commerce.Produits.forEach(produit =>{
+				
+				var totalNbrProduit: number = 0;
+				var lstProduitCommande: String = "";
+				produit.Commandes.forEach(commande => {
+					totalNbrProduit += commande.Commande_Produit.nbrProduit;
+					lstProduitCommande += "Emplacement: " + commande.User.UserInformation.emplacement + " Qte: " +commande.Commande_Produit.nbrProduit + '\n' ;
+				});
+				mailResult += produit.nom + " Qte Total: " + totalNbrProduit + "\n";
+				mailResult += lstProduitCommande.toString();
+			});
+			mailResult += "Merci ! \n";
+			arrayMails.push(mailResult);
 		});
-		return null;
+
+		logInfo(JSON.stringify(arrayMails));
+		return arrayMails;
 	}
 }

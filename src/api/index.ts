@@ -12,5 +12,6 @@ export default () => {
 	produit(app);
 	panier(app);
 	commande(app);
+	camping(app);
   return app;
 }
