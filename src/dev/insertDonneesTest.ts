@@ -110,10 +110,16 @@ export async function insertDonneesTest (){
 		};
 		commande = await Commande.create(commande);
 
+		var produit1:Produit = retProd[0];
 		var commandeProduit: ICommande_Produit = {
 			CommandeId: commande.id,
-			ProduitId: retProd[0].id,
-			nbrProduit: 10
+			ProduitId: produit1.id,
+			nbrProduit: 10,
+			commission: produit1.commission,
+			description: produit1.description,
+			nom: produit1.nom,
+			prix: produit1.prix
+
 		};
 		Commande_Produit.create(commandeProduit); 
 		

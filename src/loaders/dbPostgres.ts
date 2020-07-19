@@ -15,6 +15,8 @@ import Panier_Produit from '../models/panier_produit.modele';
 import User_Commerce_droit from '../models/user_commerce_droit.modele';
 import User_Camping_Droit from "../models/user_camping_droit.modele";
 import Commerce_Camping from "../models/commerce_camping.model";
+import config from "../../config";
+
 
 
 var t =__dirname + '../models';
@@ -22,7 +24,7 @@ var t =__dirname + '../models';
  * Initialisation de la connexion sequelize
  * TODO: Remplacer les variables de connexion et les mettre dans le .env
  */
-export const sequelize: Sequelize = new Sequelize('postgres://postgres:postgres@localhost:5433/breaddelivery',{
+export const sequelize: Sequelize = new Sequelize(`postgres://${config.dbPostgres.user}:${config.dbPostgres.userPwd}@${config.dbPostgres.host}:${config.dbPostgres.port}/${config.dbPostgres.name}`,{
 	dialect: 'postgres',
     models: [__dirname + '/../models'],
     logging: true

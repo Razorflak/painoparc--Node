@@ -1,5 +1,5 @@
 import { ICommande_Produit } from './../interfaces/ICommande_Produit';
-import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } from 'sequelize-typescript';
+import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, DataType } from 'sequelize-typescript';
 
    @Table(
 	   {
@@ -8,6 +8,7 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 	   }
    )
    export default class Commande_Produit extends Model implements ICommande_Produit{
+
 	
 	@AutoIncrement
 	@PrimaryKey
@@ -18,5 +19,29 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 	@NotEmpty
 	@Column   
 	nbrProduit: number;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	nom: String;
+
+	@AllowNull(true)
+	@Column({
+		type: DataType.TEXT
+	})
+	description: string;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column({
+		type: DataType.FLOAT
+	})
+	prix: number;
+
+	@AllowNull(true)
+	@Column({
+		type: DataType.FLOAT
+	})
+	commission: number;
 	   
    }
