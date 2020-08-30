@@ -21,4 +21,13 @@ routePanier.get('/getCurrentPanier', async(req,res) => {
 	}
 });
 
+routePanier.post('/savePanier', async(req, res) => {
+	try {
+		var panier = await panierCtrl.setPanier(req.body);
+		res.status(HttpStatus.OK).send(panier);
+	} catch (error) {
+		res.status(error.httpCodeError | 500).send(error.message);
+	}
+})
+
 }

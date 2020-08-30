@@ -5,12 +5,13 @@ export interface IProduit{
 	idCommerce: number;
 	idCategorie: number;
 	nom: string;
-	description: string;
+	description?: string;
 	prix: number;
-	stock: number;
-	commission: number;
+	stock?: number;
+	commission?: number;
 	isAvailable: boolean;
-
+	delaiProduction: number;
+	imgFileName?:String;
 	
 	Panier_Produit?: IPanier_Produit;
 	Commandes?: Array<ICommande>;

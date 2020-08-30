@@ -25,18 +25,25 @@ export default class PanierCtrl{
 		return panier;
 	}
 
-	public async setPanier(panier:IPanier):Promise<boolean>{
-		if(panier.Produits.length == 0){
-			return false;
+	public async setPanier(panier:IPanier):Promise<IPanier>{
+
+		/**
+		 * Gestion de create et Update différente car on a besoin de retourner l'id du panier lors de la création et upsert ne nous renvoie qu'un boolean...
+		 */
+		if (panier.id === undefined){
+			panier = await Panier.create(panier);
+		}else{
+			Panier.upsert(panier);
 		}
-		Panier.upsert(panier);
+		
 		panier.Produits.forEach(produit => {
 			Panier_Produit.upsert({
 				PanierId: panier.id,
-				ProduitId: produit.id
+				ProduitId: produit.id,
+				nbrProduit: (produit.Panier_Produit.nbrProduit === undefined) ? 0 : produit.Panier_Produit.nbrProduit
 			})
 		});
-		return null;
+		return panier;
 	}
 
 	public async getHistoriquePanierUser(idUser:number):Promise<IPanier[]>{

@@ -31,7 +31,6 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 	idCategorie: number;
 
 	@AllowNull(true)
-	@NotEmpty
 	@Column({
 		type: DataType.TEXT
 	})
@@ -45,12 +44,10 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 	prix: number;
 
 	@AllowNull(true)
-	@NotEmpty
 	@Column
 	stock: number;
 
 	@AllowNull(true)
-	@NotEmpty
 	@Column({
 		type: DataType.FLOAT
 	})
@@ -62,5 +59,15 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 		type: DataType.BOOLEAN
 	})
 	isAvailable: boolean;
+
+	@AllowNull(true)
+	@Column({
+		type: DataType.INTEGER
+	})
+	delaiProduction: number;
+
+	@AllowNull(true)
+	@Column
+	imgFileName:String;
 	   
    }

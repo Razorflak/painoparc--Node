@@ -19,6 +19,10 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 		@Column
 		idUser: number;
 
+		@AllowNull(true)
+		@Column
+		nom: string;
+
 		@AllowNull(false)
 		@NotEmpty
 		@Column

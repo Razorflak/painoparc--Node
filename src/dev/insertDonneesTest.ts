@@ -77,7 +77,8 @@ export async function insertDonneesTest (){
 			description: 'Une bonne baguette à l\'ancienne',
 			commission: 0.1,
 			stock: 10000,
-			isAvailable: true
+			isAvailable: true,
+			delaiProduction: 1
 		},{
 			idCommerce: commerce.id,
 			idCategorie: categoriePain.id,
@@ -86,7 +87,8 @@ export async function insertDonneesTest (){
 			description: 'Pas terrible mais ça fait masse pain',
 			commission: 0.1,
 			stock: 2,
-			isAvailable: true
+			isAvailable: true,
+			delaiProduction: 1
 			},{
 			idCommerce: commerce.id,
 			idCategorie: categorieVienposerie.id,
@@ -95,7 +97,8 @@ export async function insertDonneesTest (){
 			description: 'L\'ami rocore',
 			commission: 0.1,
 			stock: 100000000,
-			isAvailable: true
+			isAvailable: true,
+			delaiProduction: 1
 			}];
 
 		var retProd:Produit[] = await Produit.bulkCreate(produit);

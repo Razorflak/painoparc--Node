@@ -16,6 +16,8 @@ import User_Commerce_droit from '../models/user_commerce_droit.modele';
 import User_Camping_Droit from "../models/user_camping_droit.modele";
 import Commerce_Camping from "../models/commerce_camping.model";
 import config from "../../config";
+import Commerce_JourLivraisonHebdo from "../models/commerce_jourLivraisonHebdo.modele";
+import Commerce_JourNonLivraison from "../models/commerce_jourNonLivraison.modele";
 
 
 
@@ -24,6 +26,7 @@ var t =__dirname + '../models';
  * Initialisation de la connexion sequelize
  * TODO: Remplacer les variables de connexion et les mettre dans le .env
  */
+console.log(`postgres://${config.dbPostgres.user}:${config.dbPostgres.userPwd}@${config.dbPostgres.host}:${config.dbPostgres.port}/${config.dbPostgres.name}`);
 export const sequelize: Sequelize = new Sequelize(`postgres://${config.dbPostgres.user}:${config.dbPostgres.userPwd}@${config.dbPostgres.host}:${config.dbPostgres.port}/${config.dbPostgres.name}`,{
 	dialect: 'postgres',
     models: [__dirname + '/../models'],
@@ -82,6 +85,30 @@ Produit.belongsTo(Commerce,{
 	}
 });
 
+Commerce.hasMany(Commerce_JourLivraisonHebdo, {
+	foreignKey:{
+		name: 'idCommerce'
+	}
+});
+Commerce_JourLivraisonHebdo.belongsTo(Commerce,{
+	foreignKey:{
+		name: 'idCommerce'
+	}
+});
+
+
+Commerce.hasMany(Commerce_JourNonLivraison, {
+	foreignKey:{
+		name: 'idCommerce'
+	}
+});
+Commerce_JourNonLivraison.belongsTo(Commerce,{
+	foreignKey:{
+		name: 'idCommerce'
+	}
+});
+
+
 
 
 //User <--> Commande
@@ -139,6 +166,7 @@ sequelize
     }
   })
   .catch(function (err) {
+	  logInfo(err);
     logInfo('!!!!!!!!!!!!!!!!!!!!!!!!!!!! Unable to connect to the database !!!!!!!!!!!!!!!!!!!!!!!!!!!!',typeMessage.Error);
 	term.terminal()
   });
