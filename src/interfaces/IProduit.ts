@@ -1,3 +1,4 @@
+import { ICategorie } from './ICategorie';
 import { IPanier_Produit } from './IPanier_Produit';
 import { ICommande } from './ICommande';
 export interface IProduit{
@@ -12,7 +13,7 @@ export interface IProduit{
 	isAvailable: boolean;
 	delaiProduction: number;
 	imgFileName?:String;
-	
+	Categorie: ICategorie;
 	Panier_Produit?: IPanier_Produit;
 	Commandes?: Array<ICommande>;
 

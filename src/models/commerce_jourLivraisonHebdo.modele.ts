@@ -1,4 +1,5 @@
 import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } from 'sequelize-typescript';
+import { ICommerce_JourLivraisonHebdo } from '../interfaces/ICommerce_JourLivraisonHebdo';
 
    @Table(
 	   {
@@ -6,7 +7,7 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 		   timestamps: true
 	   }
    )
-   export default class Commerce_JourLivraisonHebdo extends Model {
+   export default class Commerce_JourLivraisonHebdo extends Model implements ICommerce_JourLivraisonHebdo{
 	
 	@AutoIncrement
 	@PrimaryKey

@@ -6,6 +6,5 @@ export interface IPanier {
 	dateCreation: Date;
 	dateMiseAJour: Date;
 	isFavori: Boolean;
-	isEnCours: Boolean;
 	Produits?: Array<IProduit>
 }

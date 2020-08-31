@@ -131,8 +131,7 @@ export async function insertDonneesTest (){
 			dateCreation: new Date(),
 			dateMiseAJour: new Date(),
 			isFavori: false,
-			idUser: 1,
-			isEnCours: true
+			idUser: 1
 		}
 		panier = await Panier.create(panier);
 

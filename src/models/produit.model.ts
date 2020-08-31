@@ -69,5 +69,6 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 	@AllowNull(true)
 	@Column
 	imgFileName:String;
+
 	   
    }

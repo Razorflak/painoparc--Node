@@ -1,6 +1,6 @@
 export interface ICommande_Produit{
 	nbrProduit: number;
-	nom: String;
+	nom: string;
 	description: string;
 	prix: number;
 	commission: number;

@@ -23,7 +23,7 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 	@AllowNull(false)
 	@NotEmpty
 	@Column
-	nom: String;
+	nom: string;
 
 	@AllowNull(true)
 	@Column({
