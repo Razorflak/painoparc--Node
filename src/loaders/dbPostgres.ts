@@ -148,7 +148,8 @@ Commande.belongsTo(Commerce,{
 });*/
 
 
-const reloadDataBase: boolean = true;
+const reloadDataBase: boolean = false;
+const alterDataBase: boolean = true;
 const insererJeuDonneesTest: boolean = false;
 
 
@@ -157,7 +158,7 @@ sequelize
   .then(async() => {
     logInfo('--Connection has been established successfully.--',typeMessage.Succesful);
     try {
-	    await sequelize.sync({alter: reloadDataBase});
+	    await sequelize.sync({alter: alterDataBase, force: reloadDataBase});
 	    if(insererJeuDonneesTest && reloadDataBase){
 		await insertDonneesTest();
 	    }
