@@ -13,7 +13,7 @@ export interface IProduit{
 	isAvailable: boolean;
 	delaiProduction: number;
 	imgFileName?:String;
-	Categorie: ICategorie;
+	Categorie?: ICategorie;
 	Panier_Produit?: IPanier_Produit;
 	Commandes?: Array<ICommande>;
 

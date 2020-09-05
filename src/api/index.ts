@@ -13,6 +13,6 @@ export default () => {
 	produit(app);
 	panier(app);
 	commande(app);
-	dev(app);
+	//camping(app);
   return app;
 }
