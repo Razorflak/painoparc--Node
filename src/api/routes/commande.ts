@@ -23,7 +23,7 @@ export default(app: Router) => {
 
 	routeCommande.post('/postCreateCommandeFromPanier', async(req,res) => {
 		try {
-			if(commandeCtrl.createCommandeFromPanier(req.body.panier,req.body.dateLivraison)){
+			if(commandeCtrl.createCommande(req.body.lstProduits,req.body.userId)){
 				res.status(HttpStatus.OK).send('ok');
 			}
 		} catch (error) {

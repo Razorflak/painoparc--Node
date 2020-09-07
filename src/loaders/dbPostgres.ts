@@ -10,7 +10,7 @@ import Produit from "../models/produit.model";
 import Panier from "../models/panier.model";
 import UserInformation from "../models/userInformation.model";
 import { insertDonneesTest } from '../dev/insertDonneesTest';
-import Commande_Produit from '../models/commande_produit.modele';
+import Commande_Produit from '../models/livraison_produit.modele';
 import Panier_Produit from '../models/panier_produit.modele';
 import User_Commerce_droit from '../models/user_commerce_droit.modele';
 import User_Camping_Droit from "../models/user_camping_droit.modele";
@@ -18,6 +18,8 @@ import Commerce_Camping from "../models/commerce_camping.model";
 import config from "../../config";
 import Commerce_JourLivraisonHebdo from "../models/commerce_jourLivraisonHebdo.modele";
 import Commerce_JourNonLivraison from "../models/commerce_jourNonLivraison.modele";
+import Livraison from "../models/livraison.model";
+import Livraison_Produit from "../models/livraison_produit.modele";
 
 
 
@@ -55,6 +57,20 @@ Produit.belongsTo(Categorie,{
 	}
 });
 Categorie.hasMany(Produit);
+
+Livraison.belongsTo(Commande, {
+	foreignKey: {
+		name: 'idCommande'
+	}
+});
+Commande.hasMany(Livraison);
+
+Livraison_Produit.belongsTo(Livraison, {
+	foreignKey: {
+		name: 'idLivraison'
+	}
+});
+Livraison.hasMany(Livraison_Produit);
 
 
 //Note pour les jointure 1-1 la table BelongTo contient la clé parent
@@ -135,6 +151,8 @@ Panier.belongsTo(User,{
 	}
 });
 
+
+
 //Commercant <--> Commande
 /*Commerce.hasMany(Commande,{
 	foreignKey: {
@@ -148,9 +166,9 @@ Commande.belongsTo(Commerce,{
 });*/
 
 
-const reloadDataBase: boolean = false;
-const alterDataBase: boolean = true;
-const insererJeuDonneesTest: boolean = false;
+const reloadDataBase: boolean = true;
+const alterDataBase: boolean = false;
+const insererJeuDonneesTest: boolean = true;
 
 
 sequelize

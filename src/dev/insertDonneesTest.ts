@@ -3,7 +3,7 @@ import { IUser_Commerce_Droits } from './../interfaces/IUser_Commerce_Droit';
 import { ICamping } from './../interfaces/ICamping';
 import { ICommerce_Camping } from './../interfaces/ICommerce_Camping';
 import { IPanier } from './../interfaces/IPanier';
-import { ICommande_Produit } from './../interfaces/ICommande_Produit';
+import { ILivraison_Produit } from '../interfaces/ILivraison_Produit';
 import { ICommande } from './../interfaces/ICommande';
 import { IProduit } from './../interfaces/IProduit';
 import { typeMessage } from './../error/logger';
@@ -17,7 +17,7 @@ import Camping from '../models/camping.model';
 import { ICommerce } from '../interfaces/ICommerce';
 import Produit from '../models/produit.model';
 import Commande from '../models/commande.model';
-import Commande_Produit from '../models/commande_produit.modele';
+import Commande_Produit from '../models/livraison_produit.modele';
 import Panier from '../models/panier.model';
 import Panier_Produit from '../models/panier_produit.modele';
 import Commerce_Camping from '../models/commerce_camping.model';
@@ -107,14 +107,12 @@ export async function insertDonneesTest (){
 		date.setDate(date.getDate() + 1);
 		var commande: ICommande = await {
 			idUser: newUser.id,
-			dateCommande: new Date,
-			dateLivraisonPrevu: date,
-			dateReception: date
+			dateCommande: new Date
 		};
 		commande = await Commande.create(commande);
 
 		var produit1:Produit = retProd[0];
-		var commandeProduit: ICommande_Produit = {
+		var commandeProduit: ILivraison_Produit = {
 			CommandeId: commande.id,
 			ProduitId: produit1.id,
 			nbrProduit: 10,

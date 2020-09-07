@@ -17,4 +17,6 @@ export interface IProduit{
 	Panier_Produit?: IPanier_Produit;
 	Commandes?: Array<ICommande>;
 
+	
+
 }
