@@ -1,12 +1,12 @@
+import { ILivraison_Produit } from './../interfaces/ILivraison_Produit';
 import { IProduit } from './../interfaces/IProduit';
 import { ICommerce } from './../interfaces/ICommerce';
-import { ICommande_Produit } from './../interfaces/ICommande_Produit';
 import HttpStatus from 'http-status-codes';
 import { GeneralError } from './../error/generalError';
 import { ICommande } from './../interfaces/ICommande';
 import { IPanier } from './../interfaces/IPanier';
 import Commande from '../models/commande.model';
-import Commande_Produit from '../models/commande_produit.modele';
+import Commande_Produit from '../models/livraison_produit.modele';
 import Produit from '../models/produit.model';
 import Commerce from '../models/commerce.model';
 import { where } from 'sequelize';
@@ -17,6 +17,9 @@ import User from '../models/user.model';
 import user from '../api/routes/user';
 import UserInformation from '../models/userInformation.model';
 import moment from 'moment';
+import { ILivraison } from '../interfaces/ILivraison';
+import Livraison from '../models/livraison.model';
+import Livraison_Produit from '../models/livraison_produit.modele';
 
 export default class CommandeCrtl{
 	/**
@@ -26,29 +29,42 @@ export default class CommandeCrtl{
 	 * 
 	 *Création d'un commande à partir d'un item panier
 	 */
-	public async createCommandeFromPanier (panier:IPanier, dateLivraison:Date): Promise<Boolean>{
+	public async createCommande (lstProduits: ILivraison_Produit[], idUser: number): Promise<Boolean>{
+		if (lstProduits.length == 0){
+			return false;
+		}
 		try {
 			var newCommande:ICommande = await Commande.create({
 				dateCommande: new Date(),
-				dateLivraisonPrevu: dateLivraison,
-				idUser: panier.idUser	
+				idUser: idUser	
 			} as ICommande)
 		} catch (error) {
 			throw new GeneralError(999, 'Erreur lors createCommandeFromPanier sur la création de la nouvelle commande: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		try {
-			panier.Produits.forEach(produit => {
-				Commande_Produit.create({
-					CommandeId: newCommande.id,
-					ProduitId: produit.id,
-					nbrProduit: produit.Panier_Produit.nbrProduit
-				})
-			});	
-		} catch (error) {
-			throw new GeneralError(999, 'Erreur lors createCommandeFromPanier sur la création des lignes Commande_Porduit: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-		}	
-		return true;
+		const lstLivraisons: ILivraison[] = new Array();
+		lstProduits.forEach(produit => {
+			let existLivraison: ILivraison = lstLivraisons.find(livraison => livraison.dateLivraisonPrevu === produit.dateLivraison);
+			if ( existLivraison === undefined) {
+				existLivraison = {
+					dateLivraisonPrevu: produit.dateLivraison,
+					idCommande: newCommande.id,  
+				}
+			}
+
+			if ( existLivraison.Livraison_Produits === undefined) {
+				existLivraison.Livraison_Produits = new Array();
+			}
+
+			existLivraison.Livraison_Produits.push(produit);
+		});
+
+		Livraison.bulkCreate(lstLivraisons);
+		lstLivraisons.forEach(element => {
+			Livraison_Produit.bulkCreate(element.Livraison_Produits);
+		});
 	}
+
+	// TODO: Peut être à déplacer ailleur dans une class Util plus générique
 
 	/**
 	 * Génération du mail mail de commande à envoyer au Commerce.
@@ -94,8 +110,8 @@ export default class CommandeCrtl{
 				var totalNbrProduit: number = 0;
 				var lstProduitCommande: String = "";
 				produit.Commandes.forEach(commande => {
-					totalNbrProduit += commande.Commande_Produit.nbrProduit;
-					lstProduitCommande += "Emplacement: " + commande.User.UserInformation.emplacement + " Qte: " +commande.Commande_Produit.nbrProduit + '\n' ;
+					//totalNbrProduit += commande.Commande_Produit.nbrProduit;
+					//lstProduitCommande += "Emplacement: " + commande.User.UserInformation.emplacement + " Qte: " +commande.Commande_Produit.nbrProduit + '\n' ;
 				});
 				mailResult += produit.nom + " Qte Total: " + totalNbrProduit + "\n";
 				mailResult += lstProduitCommande.toString();

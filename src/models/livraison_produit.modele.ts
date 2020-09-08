@@ -1,13 +1,13 @@
-import { ICommande_Produit } from './../interfaces/ICommande_Produit';
+import { ILivraison_Produit } from '../interfaces/ILivraison_Produit';
 import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, DataType } from 'sequelize-typescript';
 
    @Table(
 	   {
-		   tableName: "commande_produit",
+		   tableName: "livraison_produit",
 		   timestamps: true
 	   }
    )
-   export default class Commande_Produit extends Model implements ICommande_Produit{
+   export default class Livraison_Produit extends Model implements ILivraison_Produit{
 
 	
 	@AutoIncrement
