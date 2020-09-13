@@ -43,7 +43,9 @@ export default class CommandeCrtl{
 		}
 		const lstLivraisons: ILivraison[] = new Array();
 		lstProduits.forEach(produit => {
+			//Recherche d'une livraison avec la même date que celle indiqué sur le produit
 			let existLivraison: ILivraison = lstLivraisons.find(livraison => livraison.dateLivraisonPrevu === produit.dateLivraison);
+			//Si elle n'existe pas on créer une nouvelle livraison
 			if ( existLivraison === undefined) {
 				existLivraison = {
 					dateLivraisonPrevu: produit.dateLivraison,
