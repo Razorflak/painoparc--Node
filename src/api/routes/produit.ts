@@ -11,7 +11,7 @@ const routeProduit = Router();
 export default(app: Router) => {
 
 app.use('/produit',routeProduit);
-
+var url = require('url')
 const produitCtrl: ProduitCtrl = new ProduitCtrl();
 routeProduit.use(validateToken);
 
@@ -29,10 +29,14 @@ routeProduit.post('/createupdate', async(req, res) => {
 /**
  * Route poiur retourner tous les produits possiblement commandable par l'utilisateur du token
  */
-routeProduit.get('/allProduitPourCommande',async(req, res) => {
+routeProduit.get('/ProduitByCommerce',async(req, res) => {
 	
 	try{
-		var result = await produitCtrl.getAllProduitPourCommande(parseInt(req.body.userId));
+		var parts = url.parse(req.url, true);
+		var query = parts.query;
+		const idCommerce: string = query.idCommerce;
+		logInfo('dans la route' + idCommerce);
+		var result = await produitCtrl.getProduitByCommerce(parseInt(req.body.userId),parseInt(idCommerce));
 		res.status(HttpStatus.OK).send(result);
 	}catch(error){
 		res.status(error.httpCodeError | 500).send(error.message);

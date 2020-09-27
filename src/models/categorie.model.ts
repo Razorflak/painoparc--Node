@@ -18,6 +18,13 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 	@AllowNull(false)
 	@NotEmpty
 	@Column
+	idTheme: number;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column
 	libelle: string;
+
+
 	   
    }

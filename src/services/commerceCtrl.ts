@@ -9,6 +9,7 @@ import Categorie from "../models/categorie.model";
 import Commerce_JourLivraisonHebdo from "../models/commerce_jourLivraisonHebdo.modele";
 import Commerce_JourNonLivraison from "../models/commerce_jourNonLivraison.modele";
 import User from "../models/user.model";
+import Theme from '../models/theme.model';
 
 export default class CommerceCtrl{
 	public async getLstCommerceForUser(userId: number): Promise<ICommerce[]> {
@@ -35,11 +36,16 @@ export default class CommerceCtrl{
 					model: Produit,
 					required: true,
 					include: [{
-						model: Categorie
+						model: Categorie,
+						include:[{
+							model: Theme
+						}]
 					}]
 				}
 				]
 			});
+			
+
 			return result;
 		} catch (error) {
 			logInfo(error.message,typeMessage.Error);			
