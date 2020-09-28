@@ -5,6 +5,7 @@ import produit from './routes/produit';
 import panier from './routes/panier';
 import commande from './routes/commande';
 import dev from './routes/dev';
+import commerce from './routes/commerce';
 
 export default () => {
 	const app = Router();
@@ -13,6 +14,7 @@ export default () => {
 	produit(app);
 	panier(app);
 	commande(app);
+	commerce(app);
 	//camping(app);
   return app;
 }

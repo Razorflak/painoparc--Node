@@ -20,6 +20,7 @@ import Commerce_JourLivraisonHebdo from "../models/commerce_jourLivraisonHebdo.m
 import Commerce_JourNonLivraison from "../models/commerce_jourNonLivraison.modele";
 import Livraison from "../models/livraison.model";
 import Livraison_Produit from "../models/livraison_produit.modele";
+import Theme from "../models/theme.model";
 
 
 
@@ -57,6 +58,13 @@ Produit.belongsTo(Categorie,{
 	}
 });
 Categorie.hasMany(Produit);
+
+Categorie.belongsTo(Theme,{
+	foreignKey: {
+		name: 'idTheme'
+	}
+});
+Theme.hasMany(Categorie);
 
 Livraison.belongsTo(Commande, {
 	foreignKey: {

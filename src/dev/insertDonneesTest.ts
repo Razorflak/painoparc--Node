@@ -1,3 +1,4 @@
+import { ITheme } from './../interfaces/ITheme';
 import { ICategorie } from './../interfaces/ICategorie';
 import { IUser_Commerce_Droits } from './../interfaces/IUser_Commerce_Droit';
 import { ICamping } from './../interfaces/ICamping';
@@ -24,6 +25,7 @@ import Commerce_Camping from '../models/commerce_camping.model';
 import User_Camping_Droit from '../models/user_camping_droit.modele';
 import Commerce from '../models/commerce.model';
 import Categorie from '../models/categorie.model';
+import Theme from '../models/theme.model';
 
 export async function insertDonneesTest (){
 	try {
@@ -61,12 +63,18 @@ export async function insertDonneesTest (){
 			nomCommerce: 'Boulangerie de Sion'
 		});
 
+		var themeBoulangerie: ITheme = await Theme.create({
+			nom: 'Boulangerie',
+		} as ITheme)
+
 		var categoriePain:ICategorie = await Categorie.create({
-			libelle: 'Pain'
+			libelle: 'Pain',
+			idTheme: themeBoulangerie.id
 		} as ICategorie);
 
 		var categorieVienposerie:ICategorie = await Categorie.create({
-			libelle: 'Viennoiseries'
+			libelle: 'Viennoiseries',
+			idTheme: themeBoulangerie.id
 		} as ICategorie);
 
 		var produit: Array<IProduit> = [{

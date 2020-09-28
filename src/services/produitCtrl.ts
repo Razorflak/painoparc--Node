@@ -19,8 +19,7 @@ export default class ProduitCtrl{
 	/**
 	 * Recupération de tous les produits commandable par l'utilisateur
 	 */
-	public async getAllProduitPourCommande(userId: number): Promise<Produit[]> {
-		logInfo(userId.toString());
+	public async getProduitByCommerce(userId: number, idCommerce: number): Promise<Produit[]> {
 		try {
 			//TODO Définir les champs de Commerce et Porduit à afficher à afficher une fois le modèle complet
 			/**
@@ -46,7 +45,10 @@ export default class ProduitCtrl{
 							required: true
 						}],
 						required: true
-					}]
+					}],
+					where: {
+						id: idCommerce
+					}
 				},Categorie],
 				where: {
 					isAvailable: true
