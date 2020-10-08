@@ -1,4 +1,4 @@
-import { ILivraison_Produit } from './../interfaces/ILivraison_Produit';
+import { ILivraisonProduit } from './../interfaces/ILivraisonProduit';
 import { IProduit } from './../interfaces/IProduit';
 import { ICommerce } from './../interfaces/ICommerce';
 import HttpStatus from 'http-status-codes';
@@ -6,7 +6,6 @@ import { GeneralError } from './../error/generalError';
 import { ICommande } from './../interfaces/ICommande';
 import { IPanier } from './../interfaces/IPanier';
 import Commande from '../models/commande.model';
-import Commande_Produit from '../models/livraison_produit.modele';
 import Produit from '../models/produit.model';
 import Commerce from '../models/commerce.model';
 import { where } from 'sequelize';
@@ -19,7 +18,12 @@ import UserInformation from '../models/userInformation.model';
 import moment from 'moment';
 import { ILivraison } from '../interfaces/ILivraison';
 import Livraison from '../models/livraison.model';
-import Livraison_Produit from '../models/livraison_produit.modele';
+import LivraisonProduit from '../models/livraisonproduit.modele';
+import { sequelize } from '../loaders/dbPostgres';
+import Categorie from '../models/categorie.model';
+import Theme from '../models/theme.model';
+import { QueryTypes } from 'sequelize';
+import { HasMany } from 'sequelize-typescript';
 
 export default class CommandeCrtl{
 	/**
@@ -29,41 +33,53 @@ export default class CommandeCrtl{
 	 * 
 	 *Création d'un commande à partir d'un item panier
 	 */
-	public async createCommande (lstProduits: ILivraison_Produit[], idUser: number): Promise<Boolean>{
+	public async createCommande (lstProduits: IProduit[], dateLivraison: Date, idUser: number): Promise<boolean>{
 		if (lstProduits.length == 0){
 			return false;
+
 		}
+		const t = await sequelize.transaction();
 		try {
 			var newCommande:ICommande = await Commande.create({
 				dateCommande: new Date(),
 				idUser: idUser	
 			} as ICommande)
 		} catch (error) {
+			await t.rollback();
 			throw new GeneralError(999, 'Erreur lors createCommandeFromPanier sur la création de la nouvelle commande: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		const lstLivraisons: ILivraison[] = new Array();
-		lstProduits.forEach(produit => {
-			//Recherche d'une livraison avec la même date que celle indiqué sur le produit
-			let existLivraison: ILivraison = lstLivraisons.find(livraison => livraison.dateLivraisonPrevu === produit.dateLivraison);
-			//Si elle n'existe pas on créer une nouvelle livraison
-			if ( existLivraison === undefined) {
-				existLivraison = {
-					dateLivraisonPrevu: produit.dateLivraison,
-					idCommande: newCommande.id,  
-				}
-			}
+		try {
+			var newLivraison: ILivraison = await Livraison.create({
+				dateLivraisonPrevu: dateLivraison,
+				idCommande: newCommande.id
+			} as ILivraison)
+		} catch (error) {
+			
+		}
+		try {
+			const arrayLivraisonProduits: ILivraisonProduit[] = new Array();
+			for(const prod of lstProduits) {
+				const livProd: ILivraisonProduit = {
+					commission: prod.commission,
+					description: prod.description,
+					nbrProduit: prod.Panier_Produit.nbrProduit,
+					nom: prod.nom,
+					prix: prod.prix,
+					idProduit: prod.id,
+					dateLivraison: dateLivraison,
+					idLivraison: newLivraison.id
 
-			if ( existLivraison.Livraison_Produits === undefined) {
-				existLivraison.Livraison_Produits = new Array();
-			}
+				};
+				arrayLivraisonProduits.push(livProd);
+			};
+			LivraisonProduit.bulkCreate(arrayLivraisonProduits);
+		} catch (error) {
+			await t.rollback();
+			throw new GeneralError(999, 'Erreur lors createCommandeFromPanier sur la création des LivraisonProduits: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		await t.commit();
 
-			existLivraison.Livraison_Produits.push(produit);
-		});
-
-		Livraison.bulkCreate(lstLivraisons);
-		lstLivraisons.forEach(element => {
-			Livraison_Produit.bulkCreate(element.Livraison_Produits);
-		});
+		return true;
 	}
 
 	// TODO: Peut être à déplacer ailleur dans une class Util plus générique
@@ -124,5 +140,29 @@ export default class CommandeCrtl{
 
 		logInfo(JSON.stringify(arrayMails));
 		return arrayMails;
+	}
+
+	public async getLstCommandeByUser(userId: number): Promise<any[]> {
+		if(!userId){
+			throw new GeneralError(999, 'Erreur lors de getLStCommandeByUser, userId invalid');
+		}
+		try {
+			var result = Commande.findAll({
+				include: [{
+					model: Livraison,
+					include: [{
+						model: LivraisonProduit
+					}]
+				}],
+				where: {
+					idUser: userId
+				}
+			});
+		} catch (error) {
+			throw new GeneralError(999,'Erreur lors de getLstCommandeByUser: ' + error)
+		}
+		
+
+		return result;
 	}
 }

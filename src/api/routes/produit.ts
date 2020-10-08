@@ -6,6 +6,7 @@ import { validateToken } from '../../services/authTokenCtrl';
 import Produit from '../../models/produit.model';
 import ProduitCtrl from '../../services/produitCtrl';
 import { logInfo } from '../../error/logger';
+import { Console } from 'console';
 
 const routeProduit = Router();
 export default(app: Router) => {
@@ -35,8 +36,8 @@ routeProduit.get('/ProduitByCommerce',async(req, res) => {
 		var parts = url.parse(req.url, true);
 		var query = parts.query;
 		const idCommerce: string = query.idCommerce;
-		logInfo('dans la route' + idCommerce);
 		var result = await produitCtrl.getProduitByCommerce(parseInt(req.body.userId),parseInt(idCommerce));
+		console.log(JSON.stringify(result));
 		res.status(HttpStatus.OK).send(result);
 	}catch(error){
 		res.status(error.httpCodeError | 500).send(error.message);

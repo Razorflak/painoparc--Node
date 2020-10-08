@@ -1,4 +1,4 @@
-import { ILivraison_Produit } from '../interfaces/ILivraison_Produit';
+import { ILivraisonProduit } from '../interfaces/ILivraisonProduit';
 import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, DataType } from 'sequelize-typescript';
 
    @Table(
@@ -7,13 +7,24 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty, D
 		   timestamps: true
 	   }
    )
-   export default class Livraison_Produit extends Model implements ILivraison_Produit{
+   export default class LivraisonProduit extends Model implements ILivraisonProduit{
 
 	
 	@AutoIncrement
 	@PrimaryKey
 	@Column
 	id: number;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column   
+	idLivraison: number;
+
+	//Copie de l'id du produit d'origine pour gardé un lien
+	@AllowNull(false)
+	@NotEmpty
+	@Column 
+	idProduit?: number;
 	
 	@AllowNull(true)
 	@NotEmpty

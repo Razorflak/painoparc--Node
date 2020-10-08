@@ -1,7 +1,9 @@
+import { IProduit } from './../../interfaces/IProduit';
 import HttpStatus from 'http-status-codes';
 import { Router } from 'express';
 import { validateToken } from '../../services/authTokenCtrl';
 import CommandeCrtl from '../../services/commandeCtrl';
+import { consoleLog, logInfo } from '../../error/logger';
 
 
 const routeCommande = Router();
@@ -21,13 +23,22 @@ export default(app: Router) => {
 		}
 	});
 
-	routeCommande.post('/postCreateCommandeFromPanier', async(req,res) => {
+	routeCommande.post('/valider', async(req,res) => {
 		try {
-			if(commandeCtrl.createCommande(req.body.lstProduits,req.body.userId)){
-				res.status(HttpStatus.OK).send('ok');
-			}
+			const lstProduit: IProduit[] = JSON.parse(req.body.Produits);
+			commandeCtrl.createCommande(lstProduit, req.body.dateLivraison, req.body.userId).then( result => {
+				if(result){
+					return res.status(HttpStatus.OK).send({result: true});
+				}
+			})
 		} catch (error) {
-			res.status(error.httpCodeError).send(error.message);
+			res.status(error.httpCodeError || 500).send(error.message);
 		}
+	})
+
+	routeCommande.get('/lstCommandeByUser', async(req, res) => {
+		const idUser: number = parseInt(req.body.userId);
+		var result = await commandeCtrl.getLstCommandeByUser(idUser);
+		res.status(HttpStatus.OK).send(result);
 	})
 }

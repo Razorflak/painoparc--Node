@@ -30,4 +30,13 @@ routePanier.post('/savePanier', async(req, res) => {
 	}
 })
 
+routePanier.post('/majInfoPanier', async(req, res) => {
+	try {
+		var panier = await panierCtrl.majInfoPanier(req.body.Produits);
+		res.status(HttpStatus.OK).send(panier);
+	} catch (error) {
+		res.status(error.httpCodeError | 500).send(error.message);
+	}
+})
+
 }

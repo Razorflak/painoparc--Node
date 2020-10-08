@@ -1,4 +1,4 @@
-import { ILivraison_Produit } from './ILivraison_Produit';
+import { ILivraisonProduit } from './ILivraisonProduit';
 import { IUser } from './IUser';
 export interface ILivraison {
 	id?: number;
@@ -7,5 +7,5 @@ export interface ILivraison {
 	dateReception?: Date;
 	idUtilisateurReception?: number;
 
-	Livraison_Produits?: ILivraison_Produit[];
+	LivraisonProduits?: ILivraisonProduit[];
 }

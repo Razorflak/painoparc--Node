@@ -3,6 +3,7 @@ import { IUser } from './../interfaces/IUser';
 import config from '../../config'
 import { nextTick } from 'process';
 import { REQUESTED_RANGE_NOT_SATISFIABLE } from 'http-status-codes';
+import { logInfo } from '../error/logger';
 
 export function generateTokenForUser (user: IUser):string{
 		
@@ -22,7 +23,7 @@ export function generateTokenForUser (user: IUser):string{
 	 * Cette fonction ajoute aussi l'id du user du Token dans le body de la Request (req.body.userId) dans userId
 	 */
 export function validateToken (req,res,next){
-	var headerAuth:String = req.get('authorization')
+	var headerAuth:String = req.get('authorization');
 	const token = (headerAuth != null ) ? headerAuth.replace('Bearer ', '') : null;
 	if(!token){
 		throw new Error ("Missing TOKEN !");

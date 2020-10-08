@@ -1,3 +1,6 @@
+import  HttpStatus  from 'http-status-codes';
+import jwt from 'jsonwebtoken';
+import config from '../../../config';
 import { Router, Request, Response } from 'express';
 import Logger from '../../loaders/logger';
 import UserCtrl from '../../services/authCtrl';
@@ -45,6 +48,23 @@ export default (app: Router) => {
 			return res.status(500).json(error.message);
 		})*/
 	});
+
+	route.get('/isSessionValid', async(req, res) => {
+		// TODO:m peut être interessant de déplacer tout ça pour le réutiliser.
+		var headerAuth:String = req.get('authorization');
+		const token = (headerAuth != null ) ? headerAuth.replace('Bearer ', '') : null;
+		if(!token){
+			throw new Error ("Missing TOKEN !");
+		};
+		//Validation du TOKEN
+		var jwtToken = jwt.verify(token, config.jwtSecret);
+		if (jwtToken){
+			res.status(HttpStatus.OK).send({token: token, userId: jwtToken["userId"]});
+			//TODO si le token est valid, sans doute bien de le prolongé d'une certaine durée
+		}else{
+			throw new Error ("TOKEN invalid");
+		}
+	})
 
 	/*app.get("/profil",async(req: Request, res: Response) => {
 		try {

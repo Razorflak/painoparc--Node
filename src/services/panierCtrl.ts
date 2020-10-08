@@ -1,10 +1,16 @@
+import { ICategorie } from './../interfaces/ICategorie';
+import { IProduit } from './../interfaces/IProduit';
 import  HttpStatus  from 'http-status-codes';
 import { GeneralError } from './../error/generalError';
 import { IPanier } from './../interfaces/IPanier';
 import Panier from '../models/panier.model';
 import Produit from '../models/produit.model';
 import Panier_Produit from '../models/panier_produit.modele';
+import Categorie from '../models/categorie.model';
+import Commerce from '../models/commerce.model';
+import { Op } from 'sequelize';
 export default class PanierCtrl{
+	
 
 	public async getCurrentPanier(idUser:number):Promise<IPanier>{
 		try {
@@ -58,5 +64,26 @@ export default class PanierCtrl{
 		} catch (error) {
 			throw new GeneralError(999,'Erreur lors de getHistoriquePanierUser: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	public async majInfoPanier(produits: IProduit[]): Promise<ICategorie[]> {
+
+		var arrayIdProduit: number[] = new Array();
+		produits.forEach(elem => arrayIdProduit.push(elem.id));
+		var result: ICategorie[] = await Categorie.findAll({
+			include: [{
+				model: Produit,
+				include: [{
+					model: Commerce
+				}],
+				where: {
+					id: {
+						[Op.in]: arrayIdProduit
+					}
+				}
+			}]
+		});
+		return result;
+
 	}
 }

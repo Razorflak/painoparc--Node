@@ -6,6 +6,7 @@ import panier from './routes/panier';
 import commande from './routes/commande';
 import dev from './routes/dev';
 import commerce from './routes/commerce';
+import camping from './routes/camping';
 
 export default () => {
 	const app = Router();
@@ -15,6 +16,6 @@ export default () => {
 	panier(app);
 	commande(app);
 	commerce(app);
-	//camping(app);
+	camping(app);
   return app;
 }

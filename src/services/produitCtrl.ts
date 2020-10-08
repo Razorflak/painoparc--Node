@@ -1,3 +1,4 @@
+import { ITheme } from './../interfaces/ITheme';
 import { ICommerce } from './../interfaces/ICommerce';
 import { IUser_Commerce_Droits } from './../interfaces/IUser_Commerce_Droit';
 import HttpStatus from 'http-status-codes';
@@ -12,6 +13,7 @@ import { logInfo, typeMessage, logError } from "../error/logger";
 import Commerce_Camping from '../models/commerce_camping.model';
 import User from '../models/user.model';
 import Categorie from '../models/categorie.model';
+import Theme from '../models/theme.model';
 
 
 export default class ProduitCtrl{
@@ -19,7 +21,7 @@ export default class ProduitCtrl{
 	/**
 	 * Recupération de tous les produits commandable par l'utilisateur
 	 */
-	public async getProduitByCommerce(userId: number, idCommerce: number): Promise<Produit[]> {
+	public async getProduitByCommerce(userId: number, idCommerce: number): Promise<any> {
 		try {
 			//TODO Définir les champs de Commerce et Porduit à afficher à afficher une fois le modèle complet
 			/**
@@ -27,39 +29,57 @@ export default class ProduitCtrl{
 			 */
 			var arrayFieldsComerce = ['id','nomCommerce'];
 			var arrayFieldsProduit = ['id','nom','description','prix','stock'];
-			var result = await Produit.findAll({
-				attributes: arrayFieldsProduit,
+			var resultCommerce: ICommerce = await Commerce.findOne({
 				include: [{
-					model: Commerce,
-					attributes: arrayFieldsComerce,
+					model: Camping,
 					required: true,
 					include: [{
-						model: Camping,
-						attributes: [],
-						include: [{
-							model: User,
-							attributes: [],
-							where: {
-								id: userId
-							},
-							required: true
-						}],
-						required: true
-					}],
-					where: {
-						id: idCommerce
-					}
-				},Categorie],
+						model: User,
+						required: true,
+						where: {
+							id: userId
+						}
+					}]
+				}],
 				where: {
-					isAvailable: true
+					id: idCommerce
 				}
 			});
+
+			var resultThemeProd: ITheme[];
+			if (resultCommerce !== undefined){
+				resultThemeProd = await Theme.findAll({
+					include: [{
+						model: Categorie,
+						include: [{
+							model: Produit,
+							include: [{
+								attributes: [],
+								model: Commerce,
+								required: true,
+								where: {
+									id: idCommerce
+								}
+							}]
+						}]
+					}],
+					order: ['ordre']
+				});
+				//resultCommerce.Themes = resultThemeProd;
+
+			}
 
 		} catch (error) {
 			logInfo(error.message,typeMessage.Error);
 			throw new GeneralError(999,'Erreur dans getAllProduitPourCommande: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
+		var result = {
+			Commerce: resultCommerce,
+			Themes: resultThemeProd
+		}
+		resultCommerce.Themes = await new Array();
+		resultCommerce.Produits = new Array();
+		resultCommerce.nomCommerce = 'TOTO';
 		return result;
 	}
 

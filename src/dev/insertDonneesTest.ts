@@ -1,10 +1,11 @@
+import { ILivraison } from './../interfaces/ILivraison';
 import { ITheme } from './../interfaces/ITheme';
 import { ICategorie } from './../interfaces/ICategorie';
 import { IUser_Commerce_Droits } from './../interfaces/IUser_Commerce_Droit';
 import { ICamping } from './../interfaces/ICamping';
 import { ICommerce_Camping } from './../interfaces/ICommerce_Camping';
 import { IPanier } from './../interfaces/IPanier';
-import { ILivraison_Produit } from '../interfaces/ILivraison_Produit';
+import { ILivraisonProduit } from '../interfaces/ILivraisonProduit';
 import { ICommande } from './../interfaces/ICommande';
 import { IProduit } from './../interfaces/IProduit';
 import { typeMessage } from './../error/logger';
@@ -18,7 +19,6 @@ import Camping from '../models/camping.model';
 import { ICommerce } from '../interfaces/ICommerce';
 import Produit from '../models/produit.model';
 import Commande from '../models/commande.model';
-import Commande_Produit from '../models/livraison_produit.modele';
 import Panier from '../models/panier.model';
 import Panier_Produit from '../models/panier_produit.modele';
 import Commerce_Camping from '../models/commerce_camping.model';
@@ -26,6 +26,7 @@ import User_Camping_Droit from '../models/user_camping_droit.modele';
 import Commerce from '../models/commerce.model';
 import Categorie from '../models/categorie.model';
 import Theme from '../models/theme.model';
+import Livraison from '../models/livraison.model';
 
 export async function insertDonneesTest (){
 	try {
@@ -50,8 +51,16 @@ export async function insertDonneesTest (){
 
 		var camping:ICamping = await Camping.create({
 			id: 1,
-			nom: 'Parc des Rosalières'
-		});
+			nom: 'Parc des Rosalières',
+			lieuReceptionCommande: 'Salle commune',
+			reception_debut: '9h00',
+			reception_fin: '11h00',
+			adresse_numero: '25',
+			adresse_rue: 'Allée de la weed',
+			adresse_ville: 'The placeToBe',
+			adresse_codePostal: '44800',
+			adresse_pays: 'France'
+		} as ICamping);
 
 		Camping.create({
 			id: 2,
@@ -65,7 +74,20 @@ export async function insertDonneesTest (){
 
 		var themeBoulangerie: ITheme = await Theme.create({
 			nom: 'Boulangerie',
+			ordre: 1
 		} as ITheme)
+
+		var themePresse: ITheme = await Theme.create({
+			nom: 'Presse',
+			ordre: 2
+		} as ITheme)
+
+		var categoriePresse: ICategorie = await Categorie.create({
+			idTheme: themePresse.id,
+			libelle: 'Journaux'
+		} as ICategorie);
+
+		
 
 		var categoriePain:ICategorie = await Categorie.create({
 			libelle: 'Pain',
@@ -100,7 +122,7 @@ export async function insertDonneesTest (){
 			},{
 			idCommerce: commerce.id,
 			idCategorie: categorieVienposerie.id,
-			nom: 'Les bon pain au chocolat',
+			nom: 'Les bon pain au chocolat qui fait plaisir',
 			prix: 1.2,
 			description: 'L\'ami rocore',
 			commission: 0.1,
@@ -108,6 +130,15 @@ export async function insertDonneesTest (){
 			isAvailable: true,
 			delaiProduction: 1
 			}];
+
+			var produitPresse: IProduit = await Produit.create({
+				prix: 1,
+				delaiProduction: 0,
+				idCategorie: categoriePresse.id,
+				idCommerce: commerce.id,
+				isAvailable: true,
+				nom: 'Le quotidien du coin'
+			} as IProduit)	
 
 		var retProd:Produit[] = await Produit.bulkCreate(produit);
 
@@ -119,18 +150,12 @@ export async function insertDonneesTest (){
 		};
 		commande = await Commande.create(commande);
 
-		var produit1:Produit = retProd[0];
-		var commandeProduit: ILivraison_Produit = {
-			CommandeId: commande.id,
-			ProduitId: produit1.id,
-			nbrProduit: 10,
-			commission: produit1.commission,
-			description: produit1.description,
-			nom: produit1.nom,
-			prix: produit1.prix
+		var livraison: ILivraison = await Livraison.create({
+			dateLivraisonPrevu: new Date(),
+			idCommande: commande.id,
+		} as ILivraison);
 
-		};
-		Commande_Produit.create(commandeProduit); 
+		var produit1:Produit = retProd[0];
 		
 		//Model d'Obj recu pour la création/MAJ d'un panier
 		var panier:IPanier = {

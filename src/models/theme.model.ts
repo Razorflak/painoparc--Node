@@ -20,4 +20,9 @@ export default class Theme extends Model implements ITheme{
 	@Column
 	nom: string;
 
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	ordre: number;
+
 }

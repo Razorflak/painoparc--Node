@@ -10,7 +10,6 @@ import Produit from "../models/produit.model";
 import Panier from "../models/panier.model";
 import UserInformation from "../models/userInformation.model";
 import { insertDonneesTest } from '../dev/insertDonneesTest';
-import Commande_Produit from '../models/livraison_produit.modele';
 import Panier_Produit from '../models/panier_produit.modele';
 import User_Commerce_droit from '../models/user_commerce_droit.modele';
 import User_Camping_Droit from "../models/user_camping_droit.modele";
@@ -19,7 +18,7 @@ import config from "../../config";
 import Commerce_JourLivraisonHebdo from "../models/commerce_jourLivraisonHebdo.modele";
 import Commerce_JourNonLivraison from "../models/commerce_jourNonLivraison.modele";
 import Livraison from "../models/livraison.model";
-import Livraison_Produit from "../models/livraison_produit.modele";
+import LivraisonProduit from "../models/livraisonproduit.modele";
 import Theme from "../models/theme.model";
 
 
@@ -43,8 +42,6 @@ Camping.belongsToMany(User,{through: User_Camping_Droit});
 Camping.belongsToMany(Commerce,{through: Commerce_Camping});
 Commerce.belongsToMany(Camping,{through: Commerce_Camping});
 
-Commande.belongsToMany(Produit, {through : Commande_Produit});
-Produit.belongsToMany(Commande, {through : Commande_Produit});
 
 Panier.belongsToMany(Produit,{through: Panier_Produit});
 Produit.belongsToMany(Panier,{through: Panier_Produit});
@@ -57,28 +54,40 @@ Produit.belongsTo(Categorie,{
 		name: 'idCategorie'
 	}
 });
-Categorie.hasMany(Produit);
+Categorie.hasMany(Produit,{
+	foreignKey: 'idCategorie'
+});
 
 Categorie.belongsTo(Theme,{
 	foreignKey: {
 		name: 'idTheme'
 	}
 });
-Theme.hasMany(Categorie);
+Theme.hasMany(Categorie,{
+	foreignKey: 'idTheme'
+});
 
 Livraison.belongsTo(Commande, {
 	foreignKey: {
 		name: 'idCommande'
 	}
 });
-Commande.hasMany(Livraison);
+Commande.hasMany(Livraison, {
+	foreignKey: {
+		name: 'idCommande'
+	}
+});
 
-Livraison_Produit.belongsTo(Livraison, {
+LivraisonProduit.belongsTo(Livraison, {
 	foreignKey: {
 		name: 'idLivraison'
 	}
 });
-Livraison.hasMany(Livraison_Produit);
+Livraison.hasMany(LivraisonProduit, {
+	foreignKey: {
+		name: 'idLivraison'
+	}
+});
 
 
 //Note pour les jointure 1-1 la table BelongTo contient la clé parent
