@@ -7,7 +7,17 @@ export interface ICommerce{
 	id?: number;
 	nomCommerce: string;
 	emailCommande: string;
+	description?:string;
 	Produits?: Array<IProduit>;
+
+	// Adresse
+	numeroVoie?: string;
+	libelleVoie?: string;
+	BP?: string;
+	codePostal?: string;
+	commune?: string;
+	pays?: string;
+
 	Commerce_JourNonLivraisons?: Commerce_JourNonLivraison[];
 	Commerce_JourLivraisonHebdos? : Commerce_JourLivraisonHebdo[];
 	Themes?: ITheme[];

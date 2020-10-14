@@ -23,6 +23,40 @@ import { Model, Table, AutoIncrement, PrimaryKey, Column, AllowNull, NotEmpty } 
 	@NotEmpty
 	@Column
 	emailCommande: string;
+
+	@AllowNull(true)
+	@Column
+	description: string;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	numeroVoie?: string;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	libelleVoie?: string;
+
+	@AllowNull(true)
+	@Column
+	BP?: string;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	codePostal?: string;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	commune?: string;
+
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	pays?: string;
+
 	   
 	   
    }

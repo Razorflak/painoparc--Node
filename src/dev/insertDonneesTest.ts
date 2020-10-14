@@ -43,8 +43,9 @@ export async function insertDonneesTest (){
 				bio: "Ceci est une bio sur une ligne unique",
 				emplacement: "80a",
 				adresse: "94 avenue de la Baraudière",
-				firstName: 'Julien',
-				lastName: 'Tanguy'
+				qualite: 'M',
+				prenom: 'Julien',
+				nom: 'Tanguy'
 			}
 		});
 		
@@ -69,8 +70,13 @@ export async function insertDonneesTest (){
 
 		var commerce: ICommerce = await Commerce.create({
 			emailCommande: 'Email@commercant.fr',
-			nomCommerce: 'Boulangerie de Sion'
-		});
+			nomCommerce: 'Boulangerie de Sion',
+			numeroVoie: '94',
+			libelleVoie: 'Avenue de la Baraudière',
+			codePostal: '44800',
+			commune: 'SAINT HERBLAIN',
+			pays: 'France'
+		} as ICommerce);
 
 		var themeBoulangerie: ITheme = await Theme.create({
 			nom: 'Boulangerie',

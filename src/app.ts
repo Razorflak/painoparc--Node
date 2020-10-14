@@ -21,6 +21,7 @@ async function startServer() {
 	//TODO Revoir pour factoriser ça quand ça deviendra charger...
 	await require('./loaders/express').default({ app });
 	await require('./loaders/dbPostgres');
+	
 	//await insertDonneesTest();
 	
 	app.listen(config.port, err => {
@@ -32,6 +33,8 @@ async function startServer() {
 
 	  logInfo('##########Server listening on port: '+config.port+'##########', typeMessage.Succesful);
 	});
+
+	await require('./loaders/multer');
    }
    
    startServer();

@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import config from '../../config'
 import routes from '../api';
+import { logInfo } from '../error/logger';
 
 export default ({ app }: { app: express.Application }) => {
 
@@ -28,10 +29,15 @@ export default ({ app }: { app: express.Application }) => {
 	app.use(require('method-override')());
    
 	// Middleware that transforms the raw string of req.body into json
-	app.use(bodyParser.urlencoded({extended: true}));
-	app.use(bodyParser.json());
+	app.use(bodyParser.json({limit: '50mb'}));
+	app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}));
+	//app.use(bodyParser.json());
+	
 	// Load API routes
 	app.use(config.api.prefix, routes());
+
+	// Stockage des images pour l'application
+	app.use(express.static(__dirname+'\\public'));
    
 	/// catch 404 and forward to error handler
 	app.use((req, res, next) => {
@@ -45,6 +51,8 @@ export default ({ app }: { app: express.Application }) => {
 	  /**
 	   * Handle 401 thrown by express-jwt library
 	   */
+	  logInfo('ya une couille dans le potage pas traité');
+	  logInfo(err);
 	  if (err.name === 'UnauthorizedError') {
 	    return res
 		 .status(err.status)

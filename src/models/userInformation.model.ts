@@ -41,12 +41,17 @@ import { IUserInformation } from '../interfaces/IUserInformation';
 	@AllowNull(false)
 	@NotEmpty
 	@Column
-	firstName: string;
+	qualite: string;
+	
+	@AllowNull(false)
+	@NotEmpty
+	@Column
+	nom: string;
 
 	@AllowNull(false)
 	@NotEmpty
 	@Column
-	lastName: string;
+	prenom: string;
 	   
 	   
    }
