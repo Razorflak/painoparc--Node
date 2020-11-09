@@ -37,7 +37,8 @@ export default ({ app }: { app: express.Application }) => {
 	app.use(config.api.prefix, routes());
 
 	// Stockage des images pour l'application
-	app.use(express.static(__dirname+'\\public'));
+	logInfo(__dirname+'\\..\\..\\assets');
+	app.use(express.static(__dirname+'\\..\\..\\public'));
    
 	/// catch 404 and forward to error handler
 	app.use((req, res, next) => {
@@ -53,6 +54,7 @@ export default ({ app }: { app: express.Application }) => {
 	   */
 	  logInfo('ya une couille dans le potage pas traité');
 	  logInfo(err);
+	  logInfo(err.status);
 	  if (err.name === 'UnauthorizedError') {
 	    return res
 		 .status(err.status)

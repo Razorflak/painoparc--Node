@@ -3,7 +3,16 @@
   "version": "0.0.1",
   "description": "",
   "main": "src/app.ts",
-  "scripts": {
+  "exec": "ts-node ./src/app.ts",
+   "scripts": {
+    "clean": "rimraf dist/*",
+    "copy-assets": "ts-node tools/copyAssets",
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "tsc": "tsc",
+    "build": "npm-run-all clean lint tsc copy-assets",
+    "dev:start": "npm-run-all build start",
+    "dev": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -21,6 +30,7 @@
     "@types/terminal-kit": "^1.28.2",
     "@types/validatorjs": "^3.15.0",
     "@types/winston": "^2.4.4",
+    "app-root-path": "^3.0.0",
     "appmetrics-dash": "^5.3.0",
     "bcrypt": "^4.0.1",
     "blob": "^0.1.0",

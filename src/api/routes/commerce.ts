@@ -6,7 +6,7 @@ import  * as fs from 'fs';
 import gm from 'gm';
 import { logInfo, typeMessage } from '../../error/logger';
 import * as path from 'path';
-import { dir } from 'console';
+import * as appRoutePath from 'app-root-path';
 
 const routeCommerce = Router();
 //const fs = require('fs');
@@ -34,7 +34,7 @@ export default(app: Router) => {
 		const idCommerce = req.body.idCommerce;
 		//Verification de l'existance du répertoire
 		// création au besoin
-		let dirImgCommerce: string = `assets/img/commerce/${idCommerce}/`;
+		let dirImgCommerce: string = `${appRoutePath}/public/assets/img/commerce/${idCommerce}/`;
 		if (!fs.existsSync(dirImgCommerce)) {
 			fs.mkdirSync(dirImgCommerce, {
 				recursive: true
@@ -63,10 +63,12 @@ export default(app: Router) => {
 	})
 
 	routeCommerce.get('/lstImagesMiniatureCommerce', async (req, res) => {
-		let dirImgCommerce: string = `assets/img/commerce/${'1'}/`;
+		logInfo(appRoutePath);
+		let dirImgCommerce: string = `${appRoutePath}/public/assets/img/commerce/${'1'}/`;
 		let result = fs.readdirSync(dirImgCommerce).filter( fileName => 
 			fileName.indexOf('_200.') !== -1
 		);
+		logInfo(JSON.stringify(result));
 		res.status(200).send(result);
 	})
 }

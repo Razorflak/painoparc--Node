@@ -79,7 +79,6 @@ export default class ProduitCtrl{
 		}
 		resultCommerce.Themes = await new Array();
 		resultCommerce.Produits = new Array();
-		resultCommerce.nomCommerce = 'TOTO';
 		return result;
 	}
 
