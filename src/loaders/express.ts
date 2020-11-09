@@ -4,6 +4,7 @@ import cors from 'cors';
 import config from '../../config'
 import routes from '../api';
 import { logInfo } from '../error/logger';
+import * as appRoutePath from 'app-root-path';
 
 export default ({ app }: { app: express.Application }) => {
 
@@ -37,8 +38,8 @@ export default ({ app }: { app: express.Application }) => {
 	app.use(config.api.prefix, routes());
 
 	// Stockage des images pour l'application
-	logInfo(__dirname+'\\..\\..\\assets');
-	app.use(express.static(__dirname+'\\..\\..\\public'));
+	logInfo(`${appRoutePath}/public`);
+	app.use(express.static(`${appRoutePath}/public`));
    
 	/// catch 404 and forward to error handler
 	app.use((req, res, next) => {
