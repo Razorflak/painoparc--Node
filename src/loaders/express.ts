@@ -55,6 +55,7 @@ export default ({ app }: { app: express.Application }) => {
 	   */
 	  logInfo('ya une couille dans le potage pas traité');
 	  logInfo(err);
+	  logInfo(err.message)
 	  logInfo(err.status);
 	  if (err.name === 'UnauthorizedError') {
 	    return res

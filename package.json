@@ -5,15 +5,13 @@
   "main": "src/app.ts",
   "exec": "ts-node ./src/app.ts",
    "scripts": {
-    "clean": "rimraf dist/*",
-    "copy-assets": "ts-node tools/copyAssets",
+    "clean": "rimraf build/*",
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
-    "tsc": "tsc",
-    "build": "npm-run-all clean lint tsc copy-assets",
+    "build": "npx tsc",
     "dev:start": "npm-run-all build start",
-    "dev": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
-    "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "devBU": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
+    "dev": "nodemon src/app.ts",
+    "startProd": "node buid/src/app.js"
   },
   "author": "",
   "license": "ISC",
